@@ -2,7 +2,6 @@ import tensorflow as tf
 
 # Helper libraries
 import numpy as np
-import matplotlib.pyplot as plt
 import tensorflow.keras as keras
 import random
 
@@ -148,7 +147,7 @@ def complexEncoderName(complexEncoder, s):
     return complexEncoder
 
 
-complexEncoder1 = complexEncoderName(keras.models.load_model('autoencoder4', custom_objects={"encoderEvaluation": encoderEvaluation}), 's')
+complexEncoder1 = complexEncoderName(keras.models.load_model('Pretraining/autoencoder4', custom_objects={"encoderEvaluation": encoderEvaluation}), 's')
 
 input1 = keras.layers.Input((773,))
 input2 = keras.layers.Input((773,))
@@ -183,6 +182,7 @@ partTest = validGen.__getitem__(0)
 valInputs = partTest[0]
 valLabels = partTest[1]
 
+#totalModel.load_weights('totalModel50SGD')
 totalModel.fit(x=trainGen, epochs=100, validation_data=(valInputs, valLabels))
 
 inputs = valInputs
