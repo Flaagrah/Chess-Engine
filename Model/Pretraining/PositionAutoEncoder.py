@@ -5,7 +5,6 @@ import tensorflow as tf
 
 # Helper libraries
 import numpy as np
-import matplotlib.pyplot as plt
 import tensorflow.keras as keras
 
 
@@ -33,53 +32,71 @@ def encoderEvaluation(y_true, y_enc):
     return tf.divide(tf.reduce_sum(tf.abs(tf.subtract(y_true, y_enc_round))), tf.cast(tf.size(y_true), tf.float32))
     #return tf.reduce_sum(tf.abs(tf.subtract(y_true_round, y_enc_round)))
 
-autoencoder = keras.models.load_model('', custom_objects={"encoderEvaluation": encoderEvaluation})
+#autoencoder = keras.models.load_model('autoencoder', custom_objects={"encoderEvaluation": encoderEvaluation})
 
 #Reduce 773 to 600
-# encoder_input = keras.Input(shape=(773,))
-# enc_first_layer = keras.layers.Dense(600, activation="relu")(encoder_input)
-# decoding = keras.layers.Dense(773, activation="sigmoid")(enc_first_layer)
-#
-# autoencoder = keras.Model(encoder_input, decoding)
-# lr = keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.005, decay_steps=50, decay_rate=0.98)
-# opt = keras.optimizers.Adam(learning_rate=lr)
-# autoencoder.compile(optimizer=opt, loss='binary_crossentropy', metrics=[encoderEvaluation])
-# len(states)
-#
-# autoencoder.fit(states, states, epochs=5, batch_size=50, shuffle=True, validation_data=(states2, states2))
-# autoencoder.save('autoencoder')
+encoder_input = keras.Input(shape=(773,))
+enc_first_layer = keras.layers.Dense(600, activation="relu")(encoder_input)
+decoding = keras.layers.Dense(773, activation="sigmoid")(enc_first_layer)
+
+autoencoder = keras.Model(encoder_input, decoding)
+lr = keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.005, decay_steps=50, decay_rate=0.98)
+opt = keras.optimizers.Adam(learning_rate=lr)
+autoencoder.compile(optimizer=opt, loss='binary_crossentropy', metrics=[encoderEvaluation])
+len(states)
+
+autoencoder.fit(states, states, epochs=5, batch_size=50, shuffle=True, validation_data=(states2, states2))
+#autoencoder.save('autoencoder')
 
 #helper method for layerwise training
 def readyForNext(autoencoder, nodes, prevNodes):
     #new_model = keras.Model(autoencoder.input, autoencoder.layers[-2].output)
     for layer in autoencoder.layers:
         layer.trainable = False
-    newLayer = keras.layers.Dense(nodes, activation="relu")(autoencoder.layers[-2].output)
-    newOutput = keras.layers.Dense(prevNodes, activation="relu")(newLayer)
+    newLayer = keras.layers.Dense(nodes, activation="relu", name="newDense"+str(nodes))(autoencoder.layers[-2].output)
+    newOutput = keras.layers.Dense(prevNodes, activation="relu", name="newOutput"+str(nodes))(newLayer)
     newModel = keras.Model(autoencoder.input, newOutput)
     oldModel = keras.Model(autoencoder.input, autoencoder.layers[-2].output)
     return newModel, oldModel
 
-autoencoder2 = keras.models.load_model('autoencoder2')
+#autoencoder2 = keras.models.load_model('autoencoder2')
 
+def trainNextLayer(prevAutoEncoder, nodes, prevNodes, decay_steps, decay_rate):
+    autoencoderNext, old = readyForNext(prevAutoEncoder, nodes, prevNodes)
+    print(autoencoderNext.summary())
+    print(old.summary())
+    for layer in autoencoderNext.layers:
+        print(layer.trainable)
 
+    predictions = old.predict(states)
+    validation_preds = old.predict(states2)
+
+    # Train the second layer of size 400
+    lr = keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.001, decay_steps=decay_steps, decay_rate=decay_rate)
+    opt = keras.optimizers.Adam(learning_rate=lr)
+    autoencoderNext.compile(optimizer=opt, loss=tf.keras.losses.MeanSquaredError())
+    autoencoderNext.fit(states, predictions, epochs=50, batch_size=1000, verbose=1, shuffle=True, validation_data=(states2, validation_preds))
+    return autoencoderNext
+
+autoencoder2 = trainNextLayer(autoencoder, 400, 600, 1200, 0.8)
 # autoencoder2, old = readyForNext(autoencoder, 400, 600)
 # print(autoencoder2.summary())
 # print(old.summary())
 # for layer in autoencoder2.layers:
 #     print(layer.trainable)
-
+#
 # predictions = old.predict(states)
 # validation_preds = old.predict(states2)
-
-#Train the second layer of size 400
+#
+# #Train the second layer of size 400
 # lr = keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.001, decay_steps=1200, decay_rate=0.8)
 # opt = keras.optimizers.Adam(learning_rate=lr)
 # autoencoder2.compile(optimizer=opt, loss=tf.keras.losses.MeanSquaredError())
 # autoencoder2.fit(states, predictions, epochs = 50, batch_size=1000, verbose=1, shuffle=True, validation_data=(states2, validation_preds))
 # autoencoder2.save('autoencoder2')
 
-autoencoder3 = keras.models.load_model('autoencoder3')
+autoencoder3 = trainNextLayer(autoencoder2, 200, 400, 1200, 0.95)
+#autoencoder3 = keras.models.load_model('autoencoder3')
 # autoencoder3, old = readyForNext(autoencoder2, 200, 400)
 # print(autoencoder3.summary())
 # print(old.summary())
@@ -88,28 +105,29 @@ autoencoder3 = keras.models.load_model('autoencoder3')
 #
 # predictions = old.predict(states)
 # validation_preds = old.predict(states2)
-
-#Train third layer
-
+#
+# #Train third layer
+#
 # lr = keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.001, decay_steps=1200, decay_rate=0.95)
 # opt = keras.optimizers.Adam(learning_rate=lr)
 # autoencoder3.compile(optimizer=opt, loss=tf.keras.losses.MeanSquaredError())
 # autoencoder3.fit(states, predictions, epochs = 50, batch_size=1000, verbose=1, shuffle=True, validation_data=(states2, validation_preds))
-# autoencoder3.save('autoencoder3')
+#autoencoder3.save('autoencoder3')
 
+autoencoder4 = trainNextLayer(autoencoder3, 100, 200, 1200, 0.95)
 #Train last layer. Dimensions are reduced to 100
-autoencoder4, old = readyForNext(autoencoder3, 100, 200)
-print(autoencoder4.summary())
-print(old.summary())
-for layer in autoencoder3.layers:
-    print(layer.trainable)
-
-predictions = old.predict(states)
-validation_preds = old.predict(states2)
-
-#Train final layer of autoencoder
-lr = keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.001, decay_steps=1200, decay_rate=0.95)
-opt = keras.optimizers.Adam(learning_rate=lr)
-autoencoder4.compile(optimizer=opt, loss=tf.keras.losses.MeanSquaredError())
-autoencoder4.fit(states, predictions, epochs = 50, batch_size=1000, verbose=1, shuffle=True, validation_data=(states2, validation_preds))
-autoencoder4.save('autoencoder4')
+# autoencoder4, old = readyForNext(autoencoder3, 100, 200)
+# print(autoencoder4.summary())
+# print(old.summary())
+# for layer in autoencoder3.layers:
+#     print(layer.trainable)
+#
+# predictions = old.predict(states)
+# validation_preds = old.predict(states2)
+#
+# #Train final layer of autoencoder
+# lr = keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.001, decay_steps=1200, decay_rate=0.95)
+# opt = keras.optimizers.Adam(learning_rate=lr)
+# autoencoder4.compile(optimizer=opt, loss=tf.keras.losses.MeanSquaredError())
+# autoencoder4.fit(states, predictions, epochs = 50, batch_size=1000, verbose=1, shuffle=True, validation_data=(states2, validation_preds))
+#autoencoder4.save('autoencoder4')
