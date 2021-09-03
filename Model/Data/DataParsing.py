@@ -93,13 +93,22 @@ def checkIfEnPoissantAllowedStr(boardNp, prevBoardNP):
 
 
 def checkIfCaptureMoveStr(currPos, prevPos):
+    numPrev = 0
+    numCurr = 0
     for i in range(0, 8):
         for j in range(0, 8):
             currVal = currPos[i][j]
             prevVal = prevPos[i][j]
+            if (currVal != '.'):
+                numCurr = numCurr + 1
+            if (prevVal != '.'):
+                numPrev = numPrev + 1
+
             if currVal != '.' and prevVal != '.' and (
                     (currVal.isupper() and prevVal.islower()) or (currVal.islower() and prevVal.isupper())):
                 return True
+    if numPrev != numCurr:
+        return True
     return False
 
 
@@ -112,45 +121,13 @@ def convertBoolToNum(flag):
         return 1
     return 0
 
-
-def convertBoardToMatrix(board):
-    npBoard = getBoardNP(board)
-    # Initialize an empty board
-    newBoard = getBoardInit()
-    for i in range(0, 8):
-        for j in range(0, 8):
-            b = npBoard[i][j]
-            if b == '.':
-                continue
-            if b.isupper():
-                color = 0
-            else:
-                color = 1
-            piece = 0
-            lower = b.lower()
-            if lower == 'p':
-                piece = 0
-            elif lower == 'r':
-                piece = 1
-            elif lower == 'n':
-                piece = 2
-            elif lower == 'b':
-                piece = 3
-            elif lower == 'q':
-                piece = 4
-            elif lower == 'k':
-                piece = 5
-            newBoard[color][piece][i][j] = 1
-    return newBoard
-
-
 interval = 1000
 skipFirst = 0
 
 skipInitialMoves = 10
 from inspect import getmembers, isfunction
 
-if __name__ == '__main__':
+def process(num, randomNum, strBuff):
     with open("CCRL-4040.[1239176].pgn") as pgn:
         boardStates = []
         boardStatesStr = []
@@ -161,24 +138,27 @@ if __name__ == '__main__':
         sumTime = 0
         while True:
             first_game = chess.pgn.read_game(pgn)
+            print("---")
             gameCount = gameCount + 1
+            if (gameCount == num):
+                break
             if int(gameCount % interval) == 0:
                 print("reached " + str(gameCount))
             if gameCount < skipFirst:
-                continue;
+                continue
             if int(gameCount % interval) == 0 and gameCount > skipFirst:
                 print(gameCount)
-                np.savez("resultStr/results" + str(gameCount) + ".npz", results=winStates)
-                np.savez("boardStr/boardStates" + str(gameCount) + ".npz", states=boardStatesStr)
-                np.savez("boardStateBools/boardStatesBools" + str(gameCount) + ".npz", states=boardStateBools)
+                np.savez("resultStr/results" + strBuff + str(gameCount) + ".npz", results=winStates)
+                np.savez("boardStr/boardStates" + strBuff + str(gameCount) + ".npz", states=boardStatesStr)
+                np.savez("boardStateBools/boardStatesBools" + strBuff + str(gameCount) + ".npz", states=boardStateBools)
                 winStates = []
                 boardStatesStr = []
                 boardStateBools = []
             if first_game == None:
                 if int(gameCount % interval) != 0:
-                    np.savez("boardStr/boardStates" + str(gameCount) + ".npz", states=boardStatesStr)
-                    np.savez("resultStr/results" + str(gameCount) + ".npz", results=winStates)
-                    np.savez("boardStateBools/boardStatesBools" + str(gameCount) + ".npz", states=boardStateBools)
+                    np.savez("boardStr/boardStates" + strBuff + str(gameCount) + ".npz", states=boardStatesStr)
+                    np.savez("resultStr/results" + strBuff + str(gameCount) + ".npz", results=winStates)
+                    np.savez("boardStateBools/boardStatesBools" + strBuff + str(gameCount) + ".npz", states=boardStateBools)
                     winStates = []
                     boardStatesStr = []
                     boardStateBools = []
@@ -223,7 +203,7 @@ if __name__ == '__main__':
                 else:
                     whiteMove = True
                 # skip opening moves of the game and
-                if random() > 0.15 or mvCount <= skipInitialMoves or strMove == "1-0" or strMove == "0-1" or strMove == "1/2-1/2":
+                if random() > randomNum or (mvCount <= skipInitialMoves and randomNum<1.0) or strMove == "1-0" or strMove == "0-1" or strMove == "1/2-1/2":
                     continue
                 now = time.time()
                 currBoardNP = getBoardNP(board)
@@ -231,7 +211,7 @@ if __name__ == '__main__':
                 enPoissEnabled = checkIfEnPoissantAllowedStr(currBoardNP, prevBoardNP)
                 isCaptureMove = checkIfCaptureMoveStr(currBoardNP, prevBoardNP)
                 # Skip enpoissant moves and capture moves
-                if enPoissEnabled or isCaptureMove:
+                if (enPoissEnabled or isCaptureMove) and randomNum<1.0:
                     continue
 
                 if result == "0-1":
@@ -240,11 +220,16 @@ if __name__ == '__main__':
                     winStates = np.append(winStates, 1)
                 else:
                     winStates = np.append(winStates, 0.5)
+
                 boardStatesStr.append(currBoardNP)
+                print(whiteMove)
                 boardStateBools.append([convertBoolToNum(wKCastle), convertBoolToNum(wQCastle), convertBoolToNum(bKCastle),
                                         convertBoolToNum(bQCastle), convertBoolToNum(whiteMove)])
 
 
+
+if __name__ == '__main__':
+    process(-1, 0.15, "")
 
 
 
