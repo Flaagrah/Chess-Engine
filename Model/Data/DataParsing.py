@@ -172,7 +172,6 @@ def process(num, randomNum, strBuff):
                     winStates = np.append(winStates, 0.5)
 
                 boardStatesStr.append(currBoardNP)
-                print(whiteMove)
                 boardStateBools.append([convertBoolToNum(wKCastle), convertBoolToNum(wQCastle), convertBoolToNum(bKCastle),
                                         convertBoolToNum(bQCastle), convertBoolToNum(whiteMove)])
 
