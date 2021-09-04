@@ -174,8 +174,10 @@ class MyTestCase(unittest.TestCase):
         whiteK = 1
         blackK = 1
         whiteTurn = 1
-
-        for i in range(1, 5000):
+        result = results[0]
+        for i in range(0, 5000):
+            thisResult = results[i]
+            #print(thisResult)
             currBoard = boardStates[i]
             currBools = boardStateBools[i]
             checkNum = checkIfInit(currBoard)
@@ -191,6 +193,7 @@ class MyTestCase(unittest.TestCase):
                     whiteTurn = 0
                 elif checkNum == 0:
                     whiteTurn = 1
+                result = thisResult
 
             if (currBoard[0][4]!='k'):
                 blackQ = 0
@@ -217,6 +220,7 @@ class MyTestCase(unittest.TestCase):
             self.assertEqual(blackK, currBools[2])
             self.assertEqual(blackQ, currBools[3])
             self.assertEqual(whiteTurn, currBools[4])
+            self.assertEqual(result, thisResult)
             if whiteTurn == 1:
                 whiteTurn = 0
             else:

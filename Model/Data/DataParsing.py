@@ -24,56 +24,6 @@ def getBoardNP(board):
     npBoard = np.array(strBoard).reshape((8,8))
     return npBoard
 
-
-# Check if the current position allows for an enpoissant
-def checkIfEnPoissantAllowed(currPos, prevPos):
-    currWhitePawns = currPos[0][0]
-    currBlackPawns = currPos[1][0]
-    prevWhitePawns = prevPos[0][0]
-    prevBlackPawns = prevPos[1][0]
-
-    if (checkIfEnPoissantHelper(currWhitePawns, prevWhitePawns, currBlackPawns, True)):
-        return True
-    if (checkIfEnPoissantHelper(currBlackPawns, prevBlackPawns, currWhitePawns, False)):
-        return True
-    return False
-
-
-def checkIfEnPoissantHelper(myPawns, myPrevPawns, oppPawns, isWhite):
-    startRow = 1
-    advancedRow = 3
-    if isWhite:
-        startRow = 6
-        advancedRow = 4
-    for i in range(0, 8):
-        if (myPawns[advancedRow][i] and myPrevPawns[startRow][i]):
-            if (i > 0 and oppPawns[advancedRow][i - 1]) or (i < 7 and oppPawns[advancedRow][i + 1]):
-                return True
-    return False
-
-
-# Check if the previous move was a capture
-def checkIfCaptureMove(currBoard, prevBoard):
-    for i in range(0, 8):
-        for j in range(0, 8):
-            isPrevBlack = False
-            isPrevWhite = False
-            isCurrBlack = False
-            isCurrWhite = False
-            for k in range(0, 6):
-                if (currBoard[0][k][i][j] == 1):
-                    isCurrWhite = True
-                elif (currBoard[1][k][i][j] == 1):
-                    isCurrBlack = True
-                if (prevBoard[0][k][i][j] == 1):
-                    isPrevWhite = True
-                elif (prevBoard[1][k][i][j] == 1):
-                    isPrevBlack = True
-                if ((isCurrBlack and isPrevWhite) or (isCurrWhite and isPrevBlack)):
-                    return True
-    return False
-
-
 def checkIfEnPoissantAllowedStrHelper(currPos, prevPos, startIndex, endIndex, piece, capturingPiece):
     for i in range(0, 8):
         if prevPos[startIndex][i] == piece and prevPos[endIndex][i] == '.' and currPos[startIndex][i] == '.' and \
