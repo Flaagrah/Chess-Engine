@@ -76,32 +76,54 @@ def getKingMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
     addMoveIfLegal(position, row, col, row, col-1, upperCase, nonCaptureMoves, captureMoves)
 
 
-def getPawnMoveHelper(position, upperCase, row, col, rowInc, nonCaptureMoves, captureMoves):
+def getPawnMoveHelper(prevPosition, position, upperCase, row, col, rowInc, nonCaptureMoves, captureMoves):
     nextRow = row+rowInc
     if CheckUtils.isInRange(nextRow) == False:
         return
 
     if position[nextRow][col] == '.':
-        addMoveIfLegal(position, upperCase, row, col, nextRow, col, nonCaptureMoves, captureMoves)
-
+        addMoveIfLegal(position, row, col, nextRow, col, upperCase, nonCaptureMoves, captureMoves)
     plus = col+1
     minus = col-1
-    if CheckUtils.isInRange(plus) and \
-            ((upperCase and position[nextRow][plus].islower()) or
+    if CheckUtils.isInRange(plus) and position[nextRow][plus] != '.' and \
+            ((upperCase == True and position[nextRow][plus].islower()) or
              (upperCase == False and position[nextRow][plus].isupper())):
-        addMoveIfLegal(position, upperCase, row, col, nextRow, plus, nonCaptureMoves, captureMoves)
-    if CheckUtils.isInRange(minus) and \
-            ((upperCase and position[nextRow][minus].islower()) or
+        addMoveIfLegal(position, row, col, nextRow, plus, upperCase, nonCaptureMoves, captureMoves)
+    if CheckUtils.isInRange(minus) and position[nextRow][minus] != '.' and \
+            ((upperCase == True and position[nextRow][minus].islower()) or \
              (upperCase == False and position[nextRow][minus].isupper())):
-        addMoveIfLegal(position, upperCase, row, col, nextRow, minus, nonCaptureMoves, captureMoves)
+        addMoveIfLegal(position, row, col, nextRow, minus, upperCase, nonCaptureMoves, captureMoves)
 
-def getPawnMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
+    piece = 'P'
+    thisPiece = 'p'
     if upperCase:
-        getPawnMoveHelper(position, upperCase, row, col, 1, nonCaptureMoves, captureMoves)
-    else:
-        getPawnMoveHelper(position, upperCase, row, col, -1, nonCaptureMoves, captureMoves)
+        piece = 'p'
+        thisPiece = 'P'
+    if CheckUtils.isInRange(col+1):
+        if prevPosition[row + rowInc*2][col+1] == piece and prevPosition[row][col+1] == '.' and \
+            position[row + rowInc*2][col+1] == '.' and position[row][col+1] == piece:
+            newPos = deepcopy(position)
+            newPos[row][col] = '.'
+            newPos[nextRow][col+1] = thisPiece
+            newPos[row][col+1] = '.'
+            captureMoves.append(newPos)
+    if CheckUtils.isInRange(col - 1):
+        if prevPosition[row + rowInc*2][col - 1] == piece and prevPosition[row][col - 1] == '.' and \
+                position[row + rowInc*2][col - 1] == '.' and position[row][col - 1] == piece:
+            newPos = deepcopy(position)
+            newPos[row][col] = '.'
+            newPos[nextRow][col - 1] = thisPiece
+            newPos[row][col - 1] = '.'
+            captureMoves.append(newPos)
 
-def getAllMoves(position, whiteMove):
+
+def getPawnMoves(prevPosition, position, upperCase, row, col, nonCaptureMoves, captureMoves):
+    if upperCase:
+        getPawnMoveHelper(prevPosition, position, upperCase, row, col, -1, nonCaptureMoves, captureMoves)
+    else:
+        getPawnMoveHelper(prevPosition, position, upperCase, row, col, 1, nonCaptureMoves, captureMoves)
+
+def getAllMoves(prevPosition, position, whiteMove):
     nonCaptureMoves = []
     captureMoves = []
 
@@ -110,7 +132,7 @@ def getAllMoves(position, whiteMove):
             if position[i][j] == '.':
                 continue
             elif position[i][j].lower == 'p':
-                getPawnMoves(position, whiteMove, i, j, nonCaptureMoves, captureMoves)
+                getPawnMoves(prevPosition, position, whiteMove, i, j, nonCaptureMoves, captureMoves)
             elif position[i][j].lower == 'k':
                 getKingMoves(position, whiteMove, i, j, nonCaptureMoves, captureMoves)
             elif position[i][j].lower == 'p':
