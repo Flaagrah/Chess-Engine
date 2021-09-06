@@ -1,23 +1,22 @@
 import CheckUtils
-
+from copy import deepcopy
 
 def addMoveIfLegal(position, row, col, newRow, newCol, upperCase, nonCaptureMoves, captureMoves):
     if CheckUtils.isInRange(newRow) == False or CheckUtils.isInRange(newCol) == False:
         return False
 
-    copy = position.deepcopy()
+    copy = deepcopy(position)
     c = copy[newRow][newCol]
-    isSameCase = (c.upper() and upperCase == True) or (c.lower() and upperCase == False)
-    isEmpty = c != '.'
-    if isEmpty == False and isSameCase == True:
-        return False
+    isSameCase = ((c.isupper() and upperCase == True) or (c.islower() and upperCase == False)) and c != '.'
 
+    if c != '.' and isSameCase:
+        return False
     copy[newRow][newCol] = copy[row][col]
     copy[row][col] = '.'
     if CheckUtils.isKingChecked(copy, upperCase):
         return False
 
-    if isEmpty:
+    if c == '.':
         nonCaptureMoves.append(copy)
         return True
     else:

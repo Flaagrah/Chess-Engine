@@ -194,7 +194,15 @@ class MyTestCase(unittest.TestCase):
                     ['.', '.', '.', '.', '.', '.', '.', '.'],
                     ['.', '.', '.', '.', '.', '.', '.', '.']]
         self.assertEqual(False, CheckUtils.isKingChecked(position, False))
-
+        position = [['.', '.', '.', 'Q', '.', '.', '.', '.'],
+                    ['.', '.', '.', '.', '.', '.', '.', '.'],
+                    ['.', 'R', '.', 'r', '.', '.', '.', '.'],
+                    ['.', '.', '.', '.', '.', '.', '.', '.'],
+                    ['.', '.', '.', 'k', '.', '.', '.', '.'],
+                    ['.', '.', '.', '.', '.', '.', '.', '.'],
+                    ['.', '.', '.', '.', '.', '.', '.', '.'],
+                    ['.', '.', '.', '.', '.', '.', '.', '.']]
+        self.assertEqual(False, CheckUtils.isKingChecked(position, False))
 
 if __name__ == '__main__':
     unittest.main()
