@@ -102,6 +102,15 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(0, board[-3])
         self.assertEqual(0, board[-4])
         self.assertEqual(0, board[-5])
+
+    def test_getAllNextPositions(self):
+        board = chess.Board()
+        positions = NextMoves.getAllNextPositions(board)
+        self.assertEqual(20, len(positions))
+        board = positions[0]
+        positions = NextMoves.getAllNextPositions(board)
+        self.assertEqual(20, len(positions))
+        print(positions)
     # def helper(self, position, numNCMoves, numCMoves, row, col, whiteMove, c, prevPosition = None):
     #     cMoves = []
     #     ncMoves = []

@@ -1,157 +1,157 @@
-import CheckUtils
-from copy import deepcopy
-import chess
-import re
-import numpy as np
-import time
-
-def addMoveIfLegal(position, row, col, newRow, newCol, upperCase, nonCaptureMoves, captureMoves):
-    if CheckUtils.isInRange(newRow) == False or CheckUtils.isInRange(newCol) == False:
-        return False
-
-    copy = deepcopy(position)
-    c = copy[newRow][newCol]
-    isSameCase = ((c.isupper() and upperCase == True) or (c.islower() and upperCase == False)) and c != '.'
-
-    if c != '.' and isSameCase:
-        return False
-    copy[newRow][newCol] = copy[row][col]
-    copy[row][col] = '.'
-    if CheckUtils.isKingChecked(copy, upperCase):
-        return False
-
-    # def checkForPromotion(mvList):
-    #     if (upperCase and newRow==0) or (upperCase == False and newRow==7):
-    #         copy1 = deepcopy(newPos)
-    #         copy2 = deepcopy(newPos)
-    #         copy3 = deepcopy(newPos)
-    #         copy4 = deepcopy(newPos)
-    #         newC1 = 'q'
-    #         newC2 = 'b'
-    #         newC3 = 'r'
-    #         newC4 = 'n'
-    #         if upperCase:
-    #             newC1 = 'Q'
-    #             newC2 = 'B'
-    #             newC3 = 'R'
-    #             newC4 = 'N'
-    #         if upperCase:
-    #             copy1[newRow][newCol] = newC1
-    #             copy2[newRow][newCol] = newC2
-    #             copy3[newRow][newCol] = newC3
-    #             copy4[newRow][newCol] = newC4
-    #         mvList.append(copy1)
-    #         mvList.append(copy2)
-    #         mvList.append(copy3)
-    #         mvList.append(copy4)
-
-    if c == '.':
-        nonCaptureMoves.append(copy)
-        return True
-    else:
-        captureMoves.append(copy)
-        return False
-
-def possibleLinearMoves(position, upperCase, row, col, rowInc, colInc, nonCaptureMoves, captureMoves):
-    currRow = row
-    currCol = col
-    while True:
-        currRow = currRow + rowInc
-        currCol = currCol + colInc
-        cont = addMoveIfLegal(position, row, col, currRow, currCol, upperCase, nonCaptureMoves, captureMoves)
-        if cont == False:
-            break
-
-def getRookMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
-    possibleLinearMoves(position, upperCase, row, col, 1, 0, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, -1, 0, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, 0, 1, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, 0, -1, nonCaptureMoves, captureMoves)
-
-def getBishopMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
-    possibleLinearMoves(position, upperCase, row, col, 1, 1, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, -1, -1, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, -1, 1, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, 1, -1, nonCaptureMoves, captureMoves)
-
-def getQueenMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
-    possibleLinearMoves(position, upperCase, row, col, 1, 1, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, -1, -1, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, -1, 1, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, 1, -1, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, 1, 0, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, -1, 0, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, 0, 1, nonCaptureMoves, captureMoves)
-    possibleLinearMoves(position, upperCase, row, col, 0, -1, nonCaptureMoves, captureMoves)
-
-def getKnightMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
-    addMoveIfLegal(position, row, col, row+1, col+2, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row+1, col-2, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row-1, col+2, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row-1, col-2, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row+2, col+1, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row+2, col-1, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row-2, col+1, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row-2, col-1, upperCase, nonCaptureMoves, captureMoves)
-
-def getKingMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
-    addMoveIfLegal(position, row, col, row+1, col+1, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row+1, col-1, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row+1, col, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row-1, col+1, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row-1, col-1, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row-1, col, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row, col+1, upperCase, nonCaptureMoves, captureMoves)
-    addMoveIfLegal(position, row, col, row, col-1, upperCase, nonCaptureMoves, captureMoves)
-
-
-def getPawnMoveHelper(prevPosition, position, upperCase, row, col, rowInc, nonCaptureMoves, captureMoves):
-    nextRow = row+rowInc
-    if CheckUtils.isInRange(nextRow) == False:
-        return
-
-    if position[nextRow][col] == '.':
-        addMoveIfLegal(position, row, col, nextRow, col, upperCase, nonCaptureMoves, captureMoves)
-    plus = col+1
-    minus = col-1
-    if CheckUtils.isInRange(plus) and position[nextRow][plus] != '.' and \
-            ((upperCase == True and position[nextRow][plus].islower()) or \
-             (upperCase == False and position[nextRow][plus].isupper())):
-        addMoveIfLegal(position, row, col, nextRow, plus, upperCase, nonCaptureMoves, captureMoves)
-    if CheckUtils.isInRange(minus) and position[nextRow][minus] != '.' and \
-            ((upperCase == True and position[nextRow][minus].islower()) or \
-             (upperCase == False and position[nextRow][minus].isupper())):
-        addMoveIfLegal(position, row, col, nextRow, minus, upperCase, nonCaptureMoves, captureMoves)
-
-    piece = 'P'
-    thisPiece = 'p'
-    if upperCase:
-        piece = 'p'
-        thisPiece = 'P'
-    if CheckUtils.isInRange(col+1):
-        print(row, rowInc, col)
-        if prevPosition[row + rowInc*2][col+1] == piece and prevPosition[row][col+1] == '.' and \
-            position[row + rowInc*2][col+1] == '.' and position[row][col+1] == piece:
-            newPos = deepcopy(position)
-            newPos[row][col] = '.'
-            newPos[nextRow][col+1] = thisPiece
-            newPos[row][col+1] = '.'
-            captureMoves.append(newPos)
-    if CheckUtils.isInRange(col - 1):
-        if prevPosition[row + rowInc*2][col - 1] == piece and prevPosition[row][col - 1] == '.' and \
-                position[row + rowInc*2][col - 1] == '.' and position[row][col - 1] == piece:
-            newPos = deepcopy(position)
-            newPos[row][col] = '.'
-            newPos[nextRow][col - 1] = thisPiece
-            newPos[row][col - 1] = '.'
-            captureMoves.append(newPos)
-
-
-def getPawnMoves(prevPosition, position, upperCase, row, col, nonCaptureMoves, captureMoves):
-    if upperCase:
-        getPawnMoveHelper(prevPosition, position, upperCase, row, col, -1, nonCaptureMoves, captureMoves)
-    else:
-        getPawnMoveHelper(prevPosition, position, upperCase, row, col, 1, nonCaptureMoves, captureMoves)
+# import CheckUtils
+# from copy import deepcopy
+# import chess
+# import re
+# import numpy as np
+# import time
+#
+# def addMoveIfLegal(position, row, col, newRow, newCol, upperCase, nonCaptureMoves, captureMoves):
+#     if CheckUtils.isInRange(newRow) == False or CheckUtils.isInRange(newCol) == False:
+#         return False
+#
+#     copy = deepcopy(position)
+#     c = copy[newRow][newCol]
+#     isSameCase = ((c.isupper() and upperCase == True) or (c.islower() and upperCase == False)) and c != '.'
+#
+#     if c != '.' and isSameCase:
+#         return False
+#     copy[newRow][newCol] = copy[row][col]
+#     copy[row][col] = '.'
+#     if CheckUtils.isKingChecked(copy, upperCase):
+#         return False
+#
+#     # def checkForPromotion(mvList):
+#     #     if (upperCase and newRow==0) or (upperCase == False and newRow==7):
+#     #         copy1 = deepcopy(newPos)
+#     #         copy2 = deepcopy(newPos)
+#     #         copy3 = deepcopy(newPos)
+#     #         copy4 = deepcopy(newPos)
+#     #         newC1 = 'q'
+#     #         newC2 = 'b'
+#     #         newC3 = 'r'
+#     #         newC4 = 'n'
+#     #         if upperCase:
+#     #             newC1 = 'Q'
+#     #             newC2 = 'B'
+#     #             newC3 = 'R'
+#     #             newC4 = 'N'
+#     #         if upperCase:
+#     #             copy1[newRow][newCol] = newC1
+#     #             copy2[newRow][newCol] = newC2
+#     #             copy3[newRow][newCol] = newC3
+#     #             copy4[newRow][newCol] = newC4
+#     #         mvList.append(copy1)
+#     #         mvList.append(copy2)
+#     #         mvList.append(copy3)
+#     #         mvList.append(copy4)
+#
+#     if c == '.':
+#         nonCaptureMoves.append(copy)
+#         return True
+#     else:
+#         captureMoves.append(copy)
+#         return False
+#
+# def possibleLinearMoves(position, upperCase, row, col, rowInc, colInc, nonCaptureMoves, captureMoves):
+#     currRow = row
+#     currCol = col
+#     while True:
+#         currRow = currRow + rowInc
+#         currCol = currCol + colInc
+#         cont = addMoveIfLegal(position, row, col, currRow, currCol, upperCase, nonCaptureMoves, captureMoves)
+#         if cont == False:
+#             break
+#
+# def getRookMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
+#     possibleLinearMoves(position, upperCase, row, col, 1, 0, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, -1, 0, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, 0, 1, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, 0, -1, nonCaptureMoves, captureMoves)
+#
+# def getBishopMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
+#     possibleLinearMoves(position, upperCase, row, col, 1, 1, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, -1, -1, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, -1, 1, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, 1, -1, nonCaptureMoves, captureMoves)
+#
+# def getQueenMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
+#     possibleLinearMoves(position, upperCase, row, col, 1, 1, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, -1, -1, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, -1, 1, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, 1, -1, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, 1, 0, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, -1, 0, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, 0, 1, nonCaptureMoves, captureMoves)
+#     possibleLinearMoves(position, upperCase, row, col, 0, -1, nonCaptureMoves, captureMoves)
+#
+# def getKnightMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
+#     addMoveIfLegal(position, row, col, row+1, col+2, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row+1, col-2, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row-1, col+2, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row-1, col-2, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row+2, col+1, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row+2, col-1, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row-2, col+1, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row-2, col-1, upperCase, nonCaptureMoves, captureMoves)
+#
+# def getKingMoves(position, upperCase, row, col, nonCaptureMoves, captureMoves):
+#     addMoveIfLegal(position, row, col, row+1, col+1, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row+1, col-1, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row+1, col, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row-1, col+1, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row-1, col-1, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row-1, col, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row, col+1, upperCase, nonCaptureMoves, captureMoves)
+#     addMoveIfLegal(position, row, col, row, col-1, upperCase, nonCaptureMoves, captureMoves)
+#
+#
+# def getPawnMoveHelper(prevPosition, position, upperCase, row, col, rowInc, nonCaptureMoves, captureMoves):
+#     nextRow = row+rowInc
+#     if CheckUtils.isInRange(nextRow) == False:
+#         return
+#
+#     if position[nextRow][col] == '.':
+#         addMoveIfLegal(position, row, col, nextRow, col, upperCase, nonCaptureMoves, captureMoves)
+#     plus = col+1
+#     minus = col-1
+#     if CheckUtils.isInRange(plus) and position[nextRow][plus] != '.' and \
+#             ((upperCase == True and position[nextRow][plus].islower()) or \
+#              (upperCase == False and position[nextRow][plus].isupper())):
+#         addMoveIfLegal(position, row, col, nextRow, plus, upperCase, nonCaptureMoves, captureMoves)
+#     if CheckUtils.isInRange(minus) and position[nextRow][minus] != '.' and \
+#             ((upperCase == True and position[nextRow][minus].islower()) or \
+#              (upperCase == False and position[nextRow][minus].isupper())):
+#         addMoveIfLegal(position, row, col, nextRow, minus, upperCase, nonCaptureMoves, captureMoves)
+#
+#     piece = 'P'
+#     thisPiece = 'p'
+#     if upperCase:
+#         piece = 'p'
+#         thisPiece = 'P'
+#     if CheckUtils.isInRange(col+1):
+#         print(row, rowInc, col)
+#         if prevPosition[row + rowInc*2][col+1] == piece and prevPosition[row][col+1] == '.' and \
+#             position[row + rowInc*2][col+1] == '.' and position[row][col+1] == piece:
+#             newPos = deepcopy(position)
+#             newPos[row][col] = '.'
+#             newPos[nextRow][col+1] = thisPiece
+#             newPos[row][col+1] = '.'
+#             captureMoves.append(newPos)
+#     if CheckUtils.isInRange(col - 1):
+#         if prevPosition[row + rowInc*2][col - 1] == piece and prevPosition[row][col - 1] == '.' and \
+#                 position[row + rowInc*2][col - 1] == '.' and position[row][col - 1] == piece:
+#             newPos = deepcopy(position)
+#             newPos[row][col] = '.'
+#             newPos[nextRow][col - 1] = thisPiece
+#             newPos[row][col - 1] = '.'
+#             captureMoves.append(newPos)
+#
+#
+# def getPawnMoves(prevPosition, position, upperCase, row, col, nonCaptureMoves, captureMoves):
+#     if upperCase:
+#         getPawnMoveHelper(prevPosition, position, upperCase, row, col, -1, nonCaptureMoves, captureMoves)
+#     else:
+#         getPawnMoveHelper(prevPosition, position, upperCase, row, col, 1, nonCaptureMoves, captureMoves)
 
 #def getAllMoves(prevPosition, position, whiteMove):
     # nonCaptureMoves = []
@@ -250,18 +250,29 @@ def convertFenToBoard(fen):
     return matrix
 
 def getAllNextPositions(board):
+    positions = []
     for move in list(board.legal_moves):
         c = board.copy()
         c.push(move)
-        #print(c.fen())
+        positions.append(c)
+    return positions
+
+import ModelGenerator as mg
+import tensorflow as tf
+import numpy as np
+import chess
+model = mg.genModel()
+model.load_weights('../Model/totalModel50SGD')
 
 
-#convertFenToBoard(chess.Board().fen())
+def getNextMove(board, board2):
+    matrix1 = convertFenToBoard(board.fen())
+    matrix2 = convertFenToBoard(board2.fen())
+    preds = model.predict([np.asarray([matrix1]), np.asarray([matrix2])])
+    print(preds)
 
-
-# board.set_fen("rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK1R1 b Qkq")
-# board.set_fen("rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK1R1 b Qkq")
-# board.set_fen("rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK1R1 b Qkq")
-# board.set_fen("rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK1R1 b Qkq")
-# print(board.fen())
-# print(time.time() - t)
+# board = chess.Board()
+# board2 = chess.Board()
+# board2.set_fen('8/4k3/8/8/KQR5/8/8/8 w')
+# print(str(board2))
+# getNextMove(board, board2)
