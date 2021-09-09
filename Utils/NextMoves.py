@@ -264,15 +264,74 @@ import chess
 model = mg.genModel()
 model.load_weights('../Model/totalModel50SGD')
 
+def compare(b1, b2, whiteMove):
+    if b1.is_checkmate():
+        if whiteMove:
+            return [0.0,1.0]
+        else:
+            return [1.0,0.0]
+    elif b2.is_checkmate():
+        if whiteMove:
+            return [1.0, 0.0]
+        else:
+            return [0.0, 1.0]
+    isB1Stale = b1.is_stalemate()
+    isB2Stale = b2.is_stalemate()
 
-def getNextMove(board, board2):
-    matrix1 = convertFenToBoard(board.fen())
-    matrix2 = convertFenToBoard(board2.fen())
-    preds = model.predict([np.asarray([matrix1]), np.asarray([matrix2])])
-    print(preds)
+    if (isB1Stale == True and isB2Stale == True):
+        return [0.5, 0.5]
+    elif (isB1Stale == True):
+        b1 = chess.Board()
+    elif (isB2Stale == True):
+        b2 = chess.Board()
 
-# board = chess.Board()
-# board2 = chess.Board()
-# board2.set_fen('8/4k3/8/8/KQR5/8/8/8 w')
-# print(str(board2))
-# getNextMove(board, board2)
+    m1 = convertFenToBoard(b1.fen())
+    m2 = convertFenToBoard(b2.fen())
+    pred = model.predict([np.asarray([m1]),np.asarray([m2])])
+    return pred[0]
+
+def getNextMove(board, alpha, isWhiteMove, depth, maxDepth):
+    if board.is_checkmate() or board.is_stalemate():
+        return board
+    def isBetter(b1, b2):
+        if b1==None:
+            return False
+        vals = compare(b1, b2, isWhiteMove)
+        if (isWhiteMove and vals[0]>vals[1]) or (isWhiteMove==False and vals[1]>vals[0]):
+            return True
+        return False
+    nextPositions = getAllNextPositions(board)
+    currPos=None
+    nextMove = True
+    i = -1
+    if isWhiteMove:
+        nextMove = False
+    index = -1
+    for pos in nextPositions:
+        index = index + 1
+        if depth>=maxDepth:
+            if currPos==None or isBetter(pos, currPos):
+                currPos = pos
+                i = index
+            if alpha != None and isBetter(pos, alpha):
+                print("there")
+                return alpha
+        else:
+            next = getNextMove(pos, currPos, nextMove, depth+1, maxDepth)
+            if currPos==None or isBetter(next, currPos):
+                currPos = next
+                i = index
+            if alpha != None and isBetter(pos, alpha):
+                print("here")
+                return alpha
+    if len(nextPositions)==0 or i == -1:
+        return board
+    if depth == 0:
+        return nextPositions[i]
+    return currPos
+
+board = chess.Board()
+board2 = chess.Board()
+board2.set_fen('8/4k3/8/8/KQR5/8/8/8 w')
+print(str(board2))
+compare(board, board2, True)

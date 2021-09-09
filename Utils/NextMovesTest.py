@@ -1,6 +1,7 @@
 import unittest
 import NextMoves
 import chess
+import time
 
 class MyTestCase(unittest.TestCase):
     def test_board(self):
@@ -110,7 +111,44 @@ class MyTestCase(unittest.TestCase):
         board = positions[0]
         positions = NextMoves.getAllNextPositions(board)
         self.assertEqual(20, len(positions))
-        print(positions)
+
+    def test_compare(self):
+        board1 = chess.Board()
+        board2 = chess.Board()
+        board1.set_fen('4k3/8/8/KQ6/8/8/8/8 w')
+        board2.set_fen('4K3/8/8/kq6/8/8/8/8 w')
+        result = NextMoves.compare(board1, board2, True)
+        self.assertGreater(result[0], result[1])
+        result = NextMoves.compare(board2, board1, True)
+        self.assertGreater(result[1], result[0])
+
+        board1.set_fen('4k3/4Q3/4K3/8/8/8/8/8 b')
+        board2.set_fen('4k3/8/8/KQ6/8/8/8/8 b')
+        result = NextMoves.compare(board1, board2, False)
+        self.assertEqual(result[0], 1.0)
+        result = NextMoves.compare(board2, board1, False)
+        self.assertEqual(result[0], 0.0)
+
+        board1.set_fen('k7/2Q5/4K3/8/8/8/8/8 b')
+        board2.set_fen('K7/2q5/4k3/8/8/8/8/8 w')
+        result = NextMoves.compare(board1, board2, False)
+        self.assertEqual(result[0], 0.5)
+        board1.set_fen('k7/2Q5/4K3/8/8/8/8/8 b')
+        board2.set_fen('k7/3Q4/4K3/8/8/8/8/8 b')
+        result = NextMoves.compare(board1, board2, False)
+        self.assertLess(result[0], result[1])
+
+    def test_get_next_move(self):
+        board = chess.Board()
+        t = time.time()
+        board.set_fen('k7/8/1K6/3R4/8/8/8/8 b')
+        nextPosition = NextMoves.getNextMove(board, None, True, 0, 2)
+        print(str(nextPosition))
+        nextPosition = NextMoves.getNextMove(nextPosition, None, True, 0, 2)
+        print(str(nextPosition))
+        # nextPosition = NextMoves.getNextMove(nextPosition, None, True, 0, 1)
+        # print(time.time()-t)
+
     # def helper(self, position, numNCMoves, numCMoves, row, col, whiteMove, c, prevPosition = None):
     #     cMoves = []
     #     ncMoves = []
