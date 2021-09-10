@@ -5,156 +5,158 @@ import time
 import timeit
 
 class MyTestCase(unittest.TestCase):
-    def test_board(self):
-        board = chess.Board()
-        m1 = chess.Move.from_uci('e2e4')
-        m2 = chess.Move.from_uci('e7e5')
-        m3 = chess.Move.from_uci('d1f3')
-        m4 = chess.Move.from_uci('a7a6')
-        m5 = chess.Move.from_uci('f1c4')
-        m6 = chess.Move.from_uci('a6a5')
-        m7 = chess.Move.from_uci('f3f7')
-        board.push(m1)
-        board.push(m2)
-        board.push(m3)
-        board.push(m4)
-        board.push(m5)
-        board.push(m6)
-        self.assertEqual(1.0, NextMoves.convertFenToBoard(board.fen())[-1])
-        board.push(m7)
-        result = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
-         0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,
-         1.0, 1.0, 0.0]
-
-        self.assertEqual(result, NextMoves.convertFenToBoard(board.fen()))
-
-    def test_board_castle(self):
-        boardObj = chess.Board()
-        boardObj.set_fen('rnbq1rk1/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w KQkq')
-        board = NextMoves.convertFenToBoard(boardObj.fen())
-        self.assertEqual(0, board[-2])
-        self.assertEqual(0, board[-3])
-        self.assertEqual(0, board[-4])
-        self.assertEqual(0, board[-5])
-
-        boardObj.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq')
-        board = NextMoves.convertFenToBoard(boardObj.fen())
-        self.assertEqual(1, board[-2])
-        self.assertEqual(1, board[-3])
-        self.assertEqual(0, board[-4])
-        self.assertEqual(0, board[-5])
-
-        boardObj.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQKR2 b Qkq')
-        board = NextMoves.convertFenToBoard(boardObj.fen())
-        self.assertEqual(1, board[-2])
-        self.assertEqual(1, board[-3])
-        self.assertEqual(1, board[-4])
-        self.assertEqual(0, board[-5])
-
-        boardObj.set_fen('rnbqkr2/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQKR2 w Qq')
-        board = NextMoves.convertFenToBoard(boardObj.fen())
-        self.assertEqual(1, board[-2])
-        self.assertEqual(0, board[-3])
-        self.assertEqual(1, board[-4])
-        self.assertEqual(0, board[-5])
-
-        boardObj.set_fen('rnbqkr2/pppp1ppp/5n2/2b1p3/2B1P3/P4N2/RPPP1PPP/1NBQKR2 b q')
-        board = NextMoves.convertFenToBoard(boardObj.fen())
-        self.assertEqual(1, board[-2])
-        self.assertEqual(0, board[-3])
-        self.assertEqual(0, board[-4])
-        self.assertEqual(0, board[-5])
-
-        boardObj.set_fen('1nbqkr2/rppp1ppp/p4n2/2b1p3/2B1P3/P4N2/RPPP1PPP/1NBQKR2 w q')
-        board = NextMoves.convertFenToBoard(boardObj.fen())
-        self.assertEqual(0, board[-2])
-        self.assertEqual(0, board[-3])
-        self.assertEqual(0, board[-4])
-        self.assertEqual(0, board[-5])
-
-    def hmmm(self):
-        d=1
-    def test_getAllNextPositions(self):
-        board = chess.Board()
-        print(timeit.timeit(self.hmmm))
-        print(timeit.timeit(NextMoves.something))
-        t = time.time()
-        positions = NextMoves.getAllNextPositions(board)
-        print("hello", time.time() - t)
-        self.assertEqual(20, len(positions))
-        board = positions[0]
-        positions = NextMoves.getAllNextPositions(board)
-        self.assertEqual(20, len(positions))
-
-    def test_compare(self):
-        board1 = chess.Board()
-        board2 = chess.Board()
-        board1.set_fen('4k3/8/8/KQ6/8/8/8/8 w')
-        board2.set_fen('4K3/8/8/kq6/8/8/8/8 w')
-        result = NextMoves.compare(board1, board2, True)
-        self.assertGreater(result[0], result[1])
-        result = NextMoves.compare(board2, board1, True)
-        self.assertGreater(result[1], result[0])
-
-        board1.set_fen('4k3/4Q3/4K3/8/8/8/8/8 b')
-        board2.set_fen('4k3/8/8/KQ6/8/8/8/8 b')
-        result = NextMoves.compare(board1, board2, False)
-        self.assertEqual(result[0], 1.0)
-        result = NextMoves.compare(board2, board1, False)
-        self.assertEqual(result[0], 0.0)
-
-        board1.set_fen('k7/2Q5/4K3/8/8/8/8/8 b')
-        board2.set_fen('K7/2q5/4k3/8/8/8/8/8 w')
-        result = NextMoves.compare(board1, board2, False)
-        self.assertEqual(result[0], 0.5)
-        board1.set_fen('k7/2Q5/4K3/8/8/8/8/8 b')
-        board2.set_fen('k7/3Q4/4K3/8/8/8/8/8 b')
-        result = NextMoves.compare(board1, board2, False)
-        self.assertLess(result[0], result[1])
+    # def test_board(self):
+    #     board = chess.Board()
+    #     m1 = chess.Move.from_uci('e2e4')
+    #     m2 = chess.Move.from_uci('e7e5')
+    #     m3 = chess.Move.from_uci('d1f3')
+    #     m4 = chess.Move.from_uci('a7a6')
+    #     m5 = chess.Move.from_uci('f1c4')
+    #     m6 = chess.Move.from_uci('a6a5')
+    #     m7 = chess.Move.from_uci('f3f7')
+    #     board.push(m1)
+    #     board.push(m2)
+    #     board.push(m3)
+    #     board.push(m4)
+    #     board.push(m5)
+    #     board.push(m6)
+    #     self.assertEqual(1.0, NextMoves.convertFenToBoard(board.fen())[-1])
+    #     board.push(m7)
+    #     result = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
+    #      0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,
+    #      1.0, 1.0, 0.0]
+    #
+    #     self.assertEqual(result, NextMoves.convertFenToBoard(board.fen()))
+    #
+    # def test_board_castle(self):
+    #     boardObj = chess.Board()
+    #     boardObj.set_fen('rnbq1rk1/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w KQkq')
+    #     board = NextMoves.convertFenToBoard(boardObj.fen())
+    #     self.assertEqual(0, board[-2])
+    #     self.assertEqual(0, board[-3])
+    #     self.assertEqual(0, board[-4])
+    #     self.assertEqual(0, board[-5])
+    #
+    #     boardObj.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq')
+    #     board = NextMoves.convertFenToBoard(boardObj.fen())
+    #     self.assertEqual(1, board[-2])
+    #     self.assertEqual(1, board[-3])
+    #     self.assertEqual(0, board[-4])
+    #     self.assertEqual(0, board[-5])
+    #
+    #     boardObj.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQKR2 b Qkq')
+    #     board = NextMoves.convertFenToBoard(boardObj.fen())
+    #     self.assertEqual(1, board[-2])
+    #     self.assertEqual(1, board[-3])
+    #     self.assertEqual(1, board[-4])
+    #     self.assertEqual(0, board[-5])
+    #
+    #     boardObj.set_fen('rnbqkr2/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQKR2 w Qq')
+    #     board = NextMoves.convertFenToBoard(boardObj.fen())
+    #     self.assertEqual(1, board[-2])
+    #     self.assertEqual(0, board[-3])
+    #     self.assertEqual(1, board[-4])
+    #     self.assertEqual(0, board[-5])
+    #
+    #     boardObj.set_fen('rnbqkr2/pppp1ppp/5n2/2b1p3/2B1P3/P4N2/RPPP1PPP/1NBQKR2 b q')
+    #     board = NextMoves.convertFenToBoard(boardObj.fen())
+    #     self.assertEqual(1, board[-2])
+    #     self.assertEqual(0, board[-3])
+    #     self.assertEqual(0, board[-4])
+    #     self.assertEqual(0, board[-5])
+    #
+    #     boardObj.set_fen('1nbqkr2/rppp1ppp/p4n2/2b1p3/2B1P3/P4N2/RPPP1PPP/1NBQKR2 w q')
+    #     board = NextMoves.convertFenToBoard(boardObj.fen())
+    #     self.assertEqual(0, board[-2])
+    #     self.assertEqual(0, board[-3])
+    #     self.assertEqual(0, board[-4])
+    #     self.assertEqual(0, board[-5])
+    #
+    # def test_getAllNextPositions(self):
+    #     board = chess.Board()
+    #     t = time.time()
+    #     positions = NextMoves.getAllNextPositions(board)
+    #     self.assertEqual(20, len(positions))
+    #     board = positions[0]
+    #     positions = NextMoves.getAllNextPositions(board)
+    #     self.assertEqual(20, len(positions))
+    #
+    # def test_compare(self):
+    #     board1 = chess.Board()
+    #     board2 = chess.Board()
+    #     board1.set_fen('4k3/8/8/KQ6/8/8/8/8 w')
+    #     board2.set_fen('4K3/8/8/kq6/8/8/8/8 w')
+    #     result = NextMoves.compare(board1, board2, True)
+    #     self.assertGreater(result[0], result[1])
+    #     result = NextMoves.compare(board2, board1, True)
+    #     self.assertGreater(result[1], result[0])
+    #
+    #     board1.set_fen('4k3/4Q3/4K3/8/8/8/8/8 b')
+    #     board2.set_fen('4k3/8/8/KQ6/8/8/8/8 b')
+    #     result = NextMoves.compare(board1, board2, False)
+    #     self.assertEqual(result[0], 1.0)
+    #     result = NextMoves.compare(board2, board1, False)
+    #     self.assertEqual(result[0], 0.0)
+    #
+    #     board1.set_fen('k7/2Q5/4K3/8/8/8/8/8 b')
+    #     board2.set_fen('K7/2q5/4k3/8/8/8/8/8 w')
+    #     result = NextMoves.compare(board1, board2, False)
+    #     self.assertEqual(result[0], 0.5)
+    #     board1.set_fen('k7/2Q5/4K3/8/8/8/8/8 b')
+    #     board2.set_fen('k7/3Q4/4K3/8/8/8/8/8 b')
+    #     result = NextMoves.compare(board1, board2, False)
+    #     self.assertLess(result[0], result[1])
 
     def test_get_next_move(self):
         board = chess.Board()
-        board.set_fen('k7/8/1K6/3R4/8/8/8/8 b')
-        nextPosition = NextMoves.getNextMove(board, None, True, 0, 2)
+        board.set_fen('k7/8/1K6/1R6/8/8/8/8 w')
+        nextPosition = NextMoves.getNextMove(board, True, 0, 2)
+        nextPosition = NextMoves.getNextMove(nextPosition, False, 0, 2)
+        nextPosition = NextMoves.getNextMove(nextPosition, True, 0, 2)
         print(str(nextPosition))
-        nextPosition = NextMoves.getNextMove(nextPosition, None, True, 0, 2)
-        print(str(nextPosition))
-        # nextPosition = NextMoves.getNextMove(nextPosition, None, True, 0, 1)
-        # print(time.time()-t)
+        self.assertEqual(True, nextPosition.is_checkmate())
 
+        board.set_fen('K7/8/1k6/1r6/8/8/8/8 b')
+        nextPosition = NextMoves.getNextMove(board, False, 0, 2)
+        print(str(nextPosition))
+        nextPosition = NextMoves.getNextMove(nextPosition, True, 0, 2)
+        print(str(nextPosition))
+        nextPosition = NextMoves.getNextMove(nextPosition, False, 0, 2)
+        print(str(nextPosition))
+        self.assertEqual(True, nextPosition.is_checkmate())
     # def helper(self, position, numNCMoves, numCMoves, row, col, whiteMove, c, prevPosition = None):
     #     cMoves = []
     #     ncMoves = []

@@ -261,6 +261,7 @@ import ModelGenerator as mg
 import tensorflow as tf
 import numpy as np
 import chess
+
 model = mg.genModel()
 model.load_weights('../Model/totalModel50SGD')
 model =tf.lite.TFLiteConverter.from_keras_model(model).convert()
@@ -272,19 +273,17 @@ model.allocate_tensors()
 
 input_details = model.get_input_details()
 output_details = model.get_output_details()
-print(input_details)
-print(output_details)
 def compare(b1, b2, whiteMove):
     if b1.is_checkmate():
-        if whiteMove:
-            return [0.0,1.0]
-        else:
-            return [1.0,0.0]
-    elif b2.is_checkmate():
         if whiteMove:
             return [1.0, 0.0]
         else:
             return [0.0, 1.0]
+    elif b2.is_checkmate():
+        if whiteMove:
+            return [0.0, 1.0]
+        else:
+            return [1.0, 0.0]
     isB1Stale = b1.is_stalemate()
     isB2Stale = b2.is_stalemate()
 
@@ -297,60 +296,94 @@ def compare(b1, b2, whiteMove):
 
     m1 = convertFenToBoard(b1.fen())
     m2 = convertFenToBoard(b2.fen())
-    t = time.time()
+    #t = time.time()
     model.set_tensor(input_details[0]['index'], np.asarray([m1],dtype=np.float32))
     model.set_tensor(input_details[1]['index'], np.asarray([m2], dtype=np.float32))
     model.invoke()
     pred = model.get_tensor(output_details[0]['index'])
-    print(time.time() - t)
+    #print(time.time() - t)
     return pred[0]
 
 import timeit
 import time
 import multiprocessing as mp
-def getNextMove(board, alpha, isWhiteMove, depth, maxDepth):
+
+
+def isBetter(b1, b2, isWhiteMove):
+    if b1 == None:
+        return False
+    vals = compare(b1, b2, isWhiteMove)
+    if (isWhiteMove and vals[0] > vals[1]) or (isWhiteMove == False and vals[1] > vals[0]):
+        return True
+    return False
+
+def getNextWhiteMove(board, alpha, depth, maxDepth):
     if board.is_checkmate() or board.is_stalemate():
         return board
-    def isBetter(b1, b2):
-        if b1==None:
-            return False
-        vals = compare(b1, b2, isWhiteMove)
-        if (isWhiteMove and vals[0]>vals[1]) or (isWhiteMove==False and vals[1]>vals[0]):
-            return True
-        return False
     nextPositions = getAllNextPositions(board)
-    currPos=None
+    currPos = None
     nextMove = True
+
     i = -1
-    if isWhiteMove:
-        nextMove = False
+    index = -1
+
+    for pos in nextPositions:
+        index = index+1
+        if depth>=maxDepth:
+            if currPos==None or isBetter(pos, currPos, True):
+                currPos = pos
+                i = index
+            if alpha != None and isBetter(pos, alpha, True):
+                return alpha
+        else:
+            next = getNextBlackMove(pos, currPos, depth+1, maxDepth)
+            if currPos==None or isBetter(next, currPos, True):
+                currPos = next
+                i = index
+            if alpha != None and isBetter(pos, alpha, True):
+                return alpha
+    if len(nextPositions)==0 or i == -1:
+        return board
+    return currPos
+
+
+def getNextBlackMove(board, alpha, depth, maxDepth):
+    if board.is_checkmate() or board.is_stalemate():
+        return board
+    nextPositions = getAllNextPositions(board)
+    currPos = None
+    nextMove = True
+
+    i = -1
     index = -1
 
     for pos in nextPositions:
         index = index + 1
-        if depth>=maxDepth:
-            if currPos==None or isBetter(pos, currPos):
+        if depth >= maxDepth:
+            if currPos == None or isBetter(pos, currPos, False):
                 currPos = pos
                 i = index
-            if alpha != None and isBetter(pos, alpha):
-                print("there")
+            if alpha != None and isBetter(pos, alpha, False):
                 return alpha
         else:
-            next = getNextMove(pos, currPos, nextMove, depth+1, maxDepth)
-            if currPos==None or isBetter(next, currPos):
+            next = getNextWhiteMove(pos, currPos, depth+1, maxDepth)
+            if currPos==None or isBetter(next, currPos, False):
                 currPos = next
                 i = index
-            if alpha != None and isBetter(pos, alpha):
-                print("here")
+            if alpha != None and isBetter(pos, alpha, False):
                 return alpha
-    if len(nextPositions)==0 or i == -1:
+    if len(nextPositions) == 0 or i == -1:
         return board
-    if depth == 0:
-        return nextPositions[i]
     return currPos
 
-board = chess.Board()
-board2 = chess.Board()
-board2.set_fen('8/4k3/8/8/KQR5/8/8/8 w')
-print(str(board2))
-compare(board, board2, True)
+def getNextMove(board, isWhiteMove, depth, maxDepth):
+    if isWhiteMove:
+        return getNextWhiteMove(board, None, depth, maxDepth)
+    else:
+        return getNextBlackMove(board, None, depth, maxDepth)
+
+# board = chess.Board()
+# board2 = chess.Board()
+# board2.set_fen('8/4k3/8/8/KQR5/8/8/8 w')
+# print(str(board2))
+# compare(board, board2, True)
