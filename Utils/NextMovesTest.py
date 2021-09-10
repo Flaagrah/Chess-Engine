@@ -2,6 +2,7 @@ import unittest
 import NextMoves
 import chess
 import time
+import timeit
 
 class MyTestCase(unittest.TestCase):
     def test_board(self):
@@ -104,9 +105,15 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(0, board[-4])
         self.assertEqual(0, board[-5])
 
+    def hmmm(self):
+        d=1
     def test_getAllNextPositions(self):
         board = chess.Board()
+        print(timeit.timeit(self.hmmm))
+        print(timeit.timeit(NextMoves.something))
+        t = time.time()
         positions = NextMoves.getAllNextPositions(board)
+        print("hello", time.time() - t)
         self.assertEqual(20, len(positions))
         board = positions[0]
         positions = NextMoves.getAllNextPositions(board)
@@ -140,7 +147,6 @@ class MyTestCase(unittest.TestCase):
 
     def test_get_next_move(self):
         board = chess.Board()
-        t = time.time()
         board.set_fen('k7/8/1K6/3R4/8/8/8/8 b')
         nextPosition = NextMoves.getNextMove(board, None, True, 0, 2)
         print(str(nextPosition))

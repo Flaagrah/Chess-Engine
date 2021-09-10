@@ -249,7 +249,7 @@ def convertFenToBoard(fen):
     matrix.append(whiteTurn)
     return matrix
 
-def getAllNextPositions(board):
+def getAllNextPositions(board=[]):
     positions = []
     for move in list(board.legal_moves):
         c = board.copy()
@@ -263,7 +263,17 @@ import numpy as np
 import chess
 model = mg.genModel()
 model.load_weights('../Model/totalModel50SGD')
+model =tf.lite.TFLiteConverter.from_keras_model(model).convert()
+with open('model.tflite', 'wb') as f:
+  f.write(model)
 
+model = tf.lite.Interpreter(model_path="model.tflite")
+model.allocate_tensors()
+
+input_details = model.get_input_details()
+output_details = model.get_output_details()
+print(input_details)
+print(output_details)
 def compare(b1, b2, whiteMove):
     if b1.is_checkmate():
         if whiteMove:
@@ -287,9 +297,17 @@ def compare(b1, b2, whiteMove):
 
     m1 = convertFenToBoard(b1.fen())
     m2 = convertFenToBoard(b2.fen())
-    pred = model.predict([np.asarray([m1]),np.asarray([m2])])
+    t = time.time()
+    model.set_tensor(input_details[0]['index'], np.asarray([m1],dtype=np.float32))
+    model.set_tensor(input_details[1]['index'], np.asarray([m2], dtype=np.float32))
+    model.invoke()
+    pred = model.get_tensor(output_details[0]['index'])
+    print(time.time() - t)
     return pred[0]
 
+import timeit
+import time
+import multiprocessing as mp
 def getNextMove(board, alpha, isWhiteMove, depth, maxDepth):
     if board.is_checkmate() or board.is_stalemate():
         return board
@@ -307,6 +325,7 @@ def getNextMove(board, alpha, isWhiteMove, depth, maxDepth):
     if isWhiteMove:
         nextMove = False
     index = -1
+
     for pos in nextPositions:
         index = index + 1
         if depth>=maxDepth:
