@@ -5,565 +5,225 @@ import time
 import timeit
 import numpy as np
 class MyTestCase(unittest.TestCase):
-    # def test_board(self):
-    #     board = chess.Board()
-    #     m1 = chess.Move.from_uci('e2e4')
-    #     m2 = chess.Move.from_uci('e7e5')
-    #     m3 = chess.Move.from_uci('d1f3')
-    #     m4 = chess.Move.from_uci('a7a6')
-    #     m5 = chess.Move.from_uci('f1c4')
-    #     m6 = chess.Move.from_uci('a6a5')
-    #     m7 = chess.Move.from_uci('f3f7')
-    #     board.push(m1)
-    #     board.push(m2)
-    #     board.push(m3)
-    #     board.push(m4)
-    #     board.push(m5)
-    #     board.push(m6)
-    #     self.assertEqual(1.0, NextMoves.convertFenToBoard(board.fen())[-1])
-    #     board.push(m7)
-    #     result = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
-    #      0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    #      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,
-    #      1.0, 1.0, 0.0]
-    #
-    #     self.assertEqual(result, NextMoves.convertFenToBoard(board.fen()))
-    #
-    # def test_board_castle(self):
-    #     boardObj = chess.Board()
-    #     boardObj.set_fen('rnbq1rk1/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w KQkq')
-    #     board = NextMoves.convertFenToBoard(boardObj.fen())
-    #     self.assertEqual(0, board[-2])
-    #     self.assertEqual(0, board[-3])
-    #     self.assertEqual(0, board[-4])
-    #     self.assertEqual(0, board[-5])
-    #
-    #     boardObj.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq')
-    #     board = NextMoves.convertFenToBoard(boardObj.fen())
-    #     self.assertEqual(1, board[-2])
-    #     self.assertEqual(1, board[-3])
-    #     self.assertEqual(0, board[-4])
-    #     self.assertEqual(0, board[-5])
-    #
-    #     boardObj.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQKR2 b Qkq')
-    #     board = NextMoves.convertFenToBoard(boardObj.fen())
-    #     self.assertEqual(1, board[-2])
-    #     self.assertEqual(1, board[-3])
-    #     self.assertEqual(1, board[-4])
-    #     self.assertEqual(0, board[-5])
-    #
-    #     boardObj.set_fen('rnbqkr2/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQKR2 w Qq')
-    #     board = NextMoves.convertFenToBoard(boardObj.fen())
-    #     self.assertEqual(1, board[-2])
-    #     self.assertEqual(0, board[-3])
-    #     self.assertEqual(1, board[-4])
-    #     self.assertEqual(0, board[-5])
-    #
-    #     boardObj.set_fen('rnbqkr2/pppp1ppp/5n2/2b1p3/2B1P3/P4N2/RPPP1PPP/1NBQKR2 b q')
-    #     board = NextMoves.convertFenToBoard(boardObj.fen())
-    #     self.assertEqual(1, board[-2])
-    #     self.assertEqual(0, board[-3])
-    #     self.assertEqual(0, board[-4])
-    #     self.assertEqual(0, board[-5])
-    #
-    #     boardObj.set_fen('1nbqkr2/rppp1ppp/p4n2/2b1p3/2B1P3/P4N2/RPPP1PPP/1NBQKR2 w q')
-    #     board = NextMoves.convertFenToBoard(boardObj.fen())
-    #     self.assertEqual(0, board[-2])
-    #     self.assertEqual(0, board[-3])
-    #     self.assertEqual(0, board[-4])
-    #     self.assertEqual(0, board[-5])
-    #
-    # def test_getAllNextPositions(self):
-    #     board = chess.Board()
-    #     t = time.time()
-    #     positions = NextMoves.getAllNextPositions(board, True)
-    #     self.assertEqual(20, len(positions))
-    #     board = positions[0]
-    #     positions = NextMoves.getAllNextPositions(board, True)
-    #     self.assertEqual(20, len(positions))
-    #
-    #     board = chess.Board()
-    #     m1 = chess.Move.from_uci('e2e4')
-    #     board.push(m1)
-    #     m2 = chess.Move.from_uci('d7d5')
-    #     board.push(m2)
-    #     positions = NextMoves.getAllNextPositions(board, True)
-    #     positionsWC = NextMoves.getAllNextPositions(board, False)
-    #     self.assertEqual(1, len(positions)-len(positionsWC))
-    #
-    # def test_compare(self):
-    #     board1 = chess.Board()
-    #     board2 = chess.Board()
-    #     board1.set_fen('4k3/8/8/KQ6/8/8/8/8 w')
-    #     board2.set_fen('4K3/8/8/kq6/8/8/8/8 w')
-    #     result = NextMoves.compare(board1, board2, True)
-    #     self.assertGreater(result[0], result[1])
-    #     result = NextMoves.compare(board2, board1, True)
-    #     self.assertGreater(result[1], result[0])
-    #
-    #     board1.set_fen('4k3/4Q3/4K3/8/8/8/8/8 b')
-    #     board2.set_fen('4k3/8/8/KQ6/8/8/8/8 b')
-    #     result = NextMoves.compare(board1, board2, False)
-    #     self.assertEqual(result[0], 1.0)
-    #     result = NextMoves.compare(board2, board1, False)
-    #     self.assertEqual(result[0], 0.0)
-    #
-    #     board1.set_fen('k7/2Q5/4K3/8/8/8/8/8 b')
-    #     board2.set_fen('K7/2q5/4k3/8/8/8/8/8 w')
-    #     result = NextMoves.compare(board1, board2, False)
-    #     self.assertEqual(result[0], 0.5)
-    #     board1.set_fen('k7/2Q5/4K3/8/8/8/8/8 b')
-    #     board2.set_fen('k7/3Q4/4K3/8/8/8/8/8 b')
-    #     result = NextMoves.compare(board1, board2, False)
-    #     self.assertLess(result[0], result[1])
+    def test_board(self):
+        board = chess.Board()
+        m1 = chess.Move.from_uci('e2e4')
+        m2 = chess.Move.from_uci('e7e5')
+        m3 = chess.Move.from_uci('d1f3')
+        m4 = chess.Move.from_uci('a7a6')
+        m5 = chess.Move.from_uci('f1c4')
+        m6 = chess.Move.from_uci('a6a5')
+        m7 = chess.Move.from_uci('f3f7')
+        board.push(m1)
+        board.push(m2)
+        board.push(m3)
+        board.push(m4)
+        board.push(m5)
+        board.push(m6)
+        self.assertEqual(1.0, NextMoves.convertFenToBoard(board.fen())[-1])
+        board.push(m7)
+        result = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
+         0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,
+         1.0, 1.0, 0.0]
 
-    # def test_capture_move(self):
-    #     board = chess.Board()
-    #     board2 = chess.Board()
-    #     m1 = chess.Move.from_uci('e2e4')
-    #     board2.push(m1)
-    #     self.assertEqual(False, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq')
-    #     board2.set_fen('rnbq1rk1/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w')
-    #     self.assertEqual(False, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('8/8/8/pk6/8/RK6/8/8 w')
-    #     board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
-    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('8/8/8/qk6/8/RK6/8/8 w')
-    #     board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
-    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('8/8/8/rk6/8/RK6/8/8 w')
-    #     board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
-    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('8/8/8/nk6/8/RK6/8/8 w')
-    #     board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
-    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('8/8/8/bk6/8/RK6/8/8 w')
-    #     board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
-    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('8/8/8/PK6/8/rk6/8/8 b')
-    #     board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
-    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('8/8/8/QK6/8/rk6/8/8 b')
-    #     board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
-    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('8/8/8/RK6/8/rk6/8/8 b')
-    #     board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
-    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('8/8/8/NK6/8/rk6/8/8 b')
-    #     board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
-    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
-    #
-    #     board.set_fen('8/8/8/BK6/8/rk6/8/8 b')
-    #     board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
-    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+        self.assertEqual(result, NextMoves.convertFenToBoard(board.fen()))
+
+    def test_board_castle(self):
+        boardObj = chess.Board()
+        boardObj.set_fen('rnbq1rk1/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w KQkq')
+        board = NextMoves.convertFenToBoard(boardObj.fen())
+        self.assertEqual(0, board[-2])
+        self.assertEqual(0, board[-3])
+        self.assertEqual(0, board[-4])
+        self.assertEqual(0, board[-5])
+
+        boardObj.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq')
+        board = NextMoves.convertFenToBoard(boardObj.fen())
+        self.assertEqual(1, board[-2])
+        self.assertEqual(1, board[-3])
+        self.assertEqual(0, board[-4])
+        self.assertEqual(0, board[-5])
+
+        boardObj.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQKR2 b Qkq')
+        board = NextMoves.convertFenToBoard(boardObj.fen())
+        self.assertEqual(1, board[-2])
+        self.assertEqual(1, board[-3])
+        self.assertEqual(1, board[-4])
+        self.assertEqual(0, board[-5])
+
+        boardObj.set_fen('rnbqkr2/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQKR2 w Qq')
+        board = NextMoves.convertFenToBoard(boardObj.fen())
+        self.assertEqual(1, board[-2])
+        self.assertEqual(0, board[-3])
+        self.assertEqual(1, board[-4])
+        self.assertEqual(0, board[-5])
+
+        boardObj.set_fen('rnbqkr2/pppp1ppp/5n2/2b1p3/2B1P3/P4N2/RPPP1PPP/1NBQKR2 b q')
+        board = NextMoves.convertFenToBoard(boardObj.fen())
+        self.assertEqual(1, board[-2])
+        self.assertEqual(0, board[-3])
+        self.assertEqual(0, board[-4])
+        self.assertEqual(0, board[-5])
+
+        boardObj.set_fen('1nbqkr2/rppp1ppp/p4n2/2b1p3/2B1P3/P4N2/RPPP1PPP/1NBQKR2 w q')
+        board = NextMoves.convertFenToBoard(boardObj.fen())
+        self.assertEqual(0, board[-2])
+        self.assertEqual(0, board[-3])
+        self.assertEqual(0, board[-4])
+        self.assertEqual(0, board[-5])
+
+    def test_getAllNextPositions(self):
+        board = chess.Board()
+        t = time.time()
+        positions = NextMoves.getAllNextPositions(board, True)
+        self.assertEqual(20, len(positions))
+        board = positions[0]
+        positions = NextMoves.getAllNextPositions(board, True)
+        self.assertEqual(20, len(positions))
+
+        board = chess.Board()
+        m1 = chess.Move.from_uci('e2e4')
+        board.push(m1)
+        m2 = chess.Move.from_uci('d7d5')
+        board.push(m2)
+        positions = NextMoves.getAllNextPositions(board, True)
+        positionsWC = NextMoves.getAllNextPositions(board, False)
+        self.assertEqual(1, len(positions)-len(positionsWC))
+
+    def test_compare(self):
+        board1 = chess.Board()
+        board2 = chess.Board()
+        board1.set_fen('4k3/8/8/KQ6/8/8/8/8 w')
+        board2.set_fen('4K3/8/8/kq6/8/8/8/8 w')
+        result = NextMoves.compare(board1, board2)
+        self.assertGreater(result[0], result[1])
+        result = NextMoves.compare(board2, board1)
+        self.assertGreater(result[1], result[0])
+
+        board1.set_fen('4k3/4Q3/4K3/8/8/8/8/8 b')
+        board2.set_fen('4k3/8/8/KQ6/8/8/8/8 b')
+        result = NextMoves.compare(board1, board2)
+        self.assertEqual(result[0], 1.0)
+        result = NextMoves.compare(board2, board1)
+        self.assertEqual(result[0], 0.0)
+
+        board1.set_fen('k7/2Q5/4K3/8/8/8/8/8 b')
+        board2.set_fen('K7/2q5/4k3/8/8/8/8/8 w')
+        result = NextMoves.compare(board1, board2)
+        self.assertEqual(result[0], 0.5)
+        board1.set_fen('k7/2Q5/4K3/8/8/8/8/8 b')
+        board2.set_fen('k7/3Q4/4K3/8/8/8/8/8 b')
+        result = NextMoves.compare(board1, board2)
+        self.assertLess(result[0], result[1])
+
+    def test_capture_move(self):
+        board = chess.Board()
+        board2 = chess.Board()
+        m1 = chess.Move.from_uci('e2e4')
+        board2.push(m1)
+        self.assertEqual(False, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq')
+        board2.set_fen('rnbq1rk1/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w')
+        self.assertEqual(False, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('8/8/8/pk6/8/RK6/8/8 w')
+        board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
+        self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('8/8/8/qk6/8/RK6/8/8 w')
+        board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
+        self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('8/8/8/rk6/8/RK6/8/8 w')
+        board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
+        self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('8/8/8/nk6/8/RK6/8/8 w')
+        board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
+        self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('8/8/8/bk6/8/RK6/8/8 w')
+        board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
+        self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('8/8/8/PK6/8/rk6/8/8 b')
+        board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
+        self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('8/8/8/QK6/8/rk6/8/8 b')
+        board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
+        self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('8/8/8/RK6/8/rk6/8/8 b')
+        board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
+        self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('8/8/8/NK6/8/rk6/8/8 b')
+        board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
+        self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+
+        board.set_fen('8/8/8/BK6/8/rk6/8/8 b')
+        board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
+        self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
 
 
     def test_get_next_move(self):
-        # board = chess.Board()
-        # board.set_fen('k7/8/1K6/1R6/8/8/8/8 w')
-        # nextPosition = NextMoves.getNextMove(board, True, 2)
-        # nextPosition2 = NextMoves.getNextMove(nextPosition, False, 2)
-        # nextPosition3 = NextMoves.getNextMove(nextPosition2, True, 2)
-        # print(str(nextPosition3))
-        # self.assertEqual(True, nextPosition3.is_checkmate())
-        #
-        # board.set_fen('K7/8/1k6/1r6/8/8/8/8 b')
-        # nextPosition = NextMoves.getNextMove(board, False, 2)
-        # nextPosition2 = NextMoves.getNextMove(nextPosition, True, 2)
-        # nextPosition3 = NextMoves.getNextMove(nextPosition2, False, 2)
-        # print(str(nextPosition3))
-        # self.assertEqual(True, nextPosition3.is_checkmate())
-        #
+        board = chess.Board()
+        board.set_fen('k7/8/1K6/1R6/8/8/8/8 w')
+        nextPosition = NextMoves.getNextMove(board, True, 2)
+        nextPosition2 = NextMoves.getNextMove(nextPosition, False, 2)
+        nextPosition3 = NextMoves.getNextMove(nextPosition2, True, 2)
+        print(str(nextPosition3))
+        self.assertEqual(True, nextPosition3.is_checkmate())
+
+        board.set_fen('K7/8/1k6/1r6/8/8/8/8 b')
+        nextPosition = NextMoves.getNextMove(board, False, 2)
+        nextPosition2 = NextMoves.getNextMove(nextPosition, True, 2)
+        nextPosition3 = NextMoves.getNextMove(nextPosition2, False, 2)
+        print(str(nextPosition3))
+        self.assertEqual(True, nextPosition3.is_checkmate())
+
         t = time.time()
         board = chess.Board("2r2rk1/pp1n1pp1/1q3b1p/2pp2PP/2P5/Q4N2/PP1B1P2/1K1R3R b - - 0 20 ")
         print(board)
-        nextPosition = NextMoves.getNextMove(board, False, 1)
+        nextPosition = NextMoves.getNextMove(board, False, 3)
         print(nextPosition)
-        # nextPosition = NextMoves.getNextMove(nextPosition, True, 0)
-        # print(nextPosition)
-        # nextPosition = NextMoves.getNextMove(nextPosition, False, 0)
-        # print(nextPosition)
-        # nextPosition = NextMoves.getNextMove(nextPosition, True, 0)
-        # print(nextPosition)
-        # nextPosition = NextMoves.getNextMove(nextPosition, False, 0)
-        # print(nextPosition)
         print(time.time()-t)
 
-        # board1 = chess.Board("2r2rk1/pp1n1pp1/1q3b1p/2pp2PP/2P5/Q4N2/PP1B1P2/1K1R3R b - - 0 20 ")
-        # board2 = chess.Board("2r2rk1/pp1n1pp1/1q3P1p/2p4P/2p5/Q4N2/PP1B1P2/1K1R3R w - - 0 20 ")
-        # print(board1)
-        # print(board2)
-        # print(NextMoves.compare(board1, board2))
-
-    # def helper(self, position, numNCMoves, numCMoves, row, col, whiteMove, c, prevPosition = None):
-    #     cMoves = []
-    #     ncMoves = []
-    #     if c.lower()=='r':
-    #         NextMoves.getRookMoves(position, whiteMove, row, col, ncMoves, cMoves)
-    #     elif c.lower()=='b':
-    #         NextMoves.getBishopMoves(position, whiteMove, row, col, ncMoves, cMoves)
-    #     elif c.lower()=='q':
-    #         NextMoves.getQueenMoves(position, whiteMove, row, col, ncMoves, cMoves)
-    #     elif c.lower()=='n':
-    #         NextMoves.getKnightMoves(position, whiteMove, row, col, ncMoves, cMoves)
-    #     elif c.lower()=='k':
-    #         NextMoves.getKingMoves(position, whiteMove, row, col, ncMoves, cMoves)
-    #     elif c.lower()=='p':
-    #         NextMoves.getPawnMoves(prevPosition, position, whiteMove, row, col, ncMoves, cMoves)
-    #
-    #     self.assertEqual(numNCMoves, len(ncMoves))
-    #     self.assertEqual(numCMoves, len(cMoves))
-    #
-    #
-    # def test_rook_moves(self):
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', 'r', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 14, 0, 2, 3, False, 'r')
-    #
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', 'b', '.', 'r', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 12, 0, 2, 3, False, 'r')
-    #
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', 'B', '.', 'r', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 12, 1, 2, 3, False, 'r')
-    #
-    #     position = [['.', '.', '.', 'Q', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', 'R', '.', 'r', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', 'k', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 2, 1, 2, 3, False, 'r')
-    #
-    # def test_bishop_moves(self):
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', 'B', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 13, 0, 4, 3, True, 'b')
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', 'Q', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', 'B', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 11, 0, 4, 3, True, 'b')
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', 'q', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', 'B', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 11, 1, 4, 3, True, 'b')
-    #
-    # def test_queen_moves(self):
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', 'Q', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 27, 0, 4, 3, True, 'q')
-    #
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', 'B', '.', '.', '.'],
-    #                 ['.', '.', '.', 'Q', '.', '.', 'R', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 21, 0, 4, 3, True, 'q')
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', 'b', '.', '.', '.'],
-    #                 ['.', '.', '.', 'Q', '.', '.', 'r', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 21, 2, 4, 3, True, 'q')
-    #
-    # def test_knight_moves(self):
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', 'N', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 8, 0, 4, 3, True, 'n')
-    #
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', 'b', 'r', '.', '.'],
-    #                 ['.', '.', '.', 'N', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 7, 1, 4, 3, True, 'n')
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', 'b', 'R', '.', '.'],
-    #                 ['.', '.', '.', 'N', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 7, 0, 4, 3, True, 'n')
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', 'N', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 4, 0, 6, 1, True, 'n')
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['r', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', 'N', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 3, 1, 6, 1, True, 'n')
-    #
-    # def test_king_moves(self):
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', 'K', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 8, 0, 6, 1, True, 'k')
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', 'K', 'r', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 4, 1, 6, 1, True, 'k')
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', 'K', 'R', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 7, 0, 6, 1, True, 'k')
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['K', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 3, 0, 7, 0, True, 'k')
-    #
-    # def test_pawnMoves(self):
-    #     prevPosition = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', 'p', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', 'P', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', 'p', 'P', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 1, 1, 3, 3, True, 'p', prevPosition)
-    #     prevPosition = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', 'p', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', 'P', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', 'p', 'P', 'p', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 1, 1, 3, 3, True, 'p', prevPosition)
-    #     prevPosition = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', 'p', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', 'P', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', 'p', 'P', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 1, 1, 4, 2, False, 'p', prevPosition)
-    #     prevPosition = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', 'p', 'P', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', 'P', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', 'P', 'p', 'P', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 1, 1, 4, 2, False, 'p', prevPosition)
-    #     prevPosition = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['p', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', 'P', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['p', 'P', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 1, 1, 4, 0, False, 'p', prevPosition)
-    #     prevPosition = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['p', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', 'Q', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['p', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', 'Q', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 1, 1, 4, 0, False, 'p', prevPosition)
-    #     prevPosition = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', 'p', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', 'P', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                     ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     position = [['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', 'p', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', 'P', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.'],
-    #                 ['.', '.', '.', '.', '.', '.', '.', '.']]
-    #     self.helper(position, 1, 1, 3, 5, True, 'p', prevPosition)
 
 if __name__ == '__main__':
     unittest.main()

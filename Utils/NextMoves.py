@@ -326,12 +326,12 @@ def compare(b1, b2):
     model.invoke()
     pred = model.get_tensor(output_details[0]['index'])
     #print(time.time() - t)
-    print("-----")
-    print(b1)
-    print("--")
-    print(b2)
-    print(pred[0])
-    print("-----")
+    # print("-----")
+    # print(b1)
+    # print("--")
+    # print(b2)
+    # print(pred[0])
+    # print("-----")
     return pred[0]
 
 import timeit
@@ -365,7 +365,7 @@ def isCaptureMove(currPos, prevPos):
 def getNextWhiteMove(board, alpha, depth, maxDepth):
     if board.is_checkmate() or board.is_stalemate():
         return board
-    nextPositions = getAllNextPositions(board, depth<=maxDepth)
+    nextPositions = getAllNextPositions(board, True)
     currPos = None
     nextMove = True
 
@@ -375,13 +375,14 @@ def getNextWhiteMove(board, alpha, depth, maxDepth):
     for pos in nextPositions:
         index = index + 1
         compareTo = pos
-        if depth < maxDepth or isCaptureMove(pos, board) or pos.has_legal_en_passant():
+        if depth < maxDepth or pos.has_legal_en_passant():
             compareTo = getNextBlackMove(pos, currPos, depth + 1, maxDepth)
-        compareTo = compareTo
-        if currPos == None or isBetter(compareTo, currPos, True):
+        change = False
+        if currPos == None or (compareTo.fen() != currPos.fen() and isBetter(compareTo, currPos, True)):
             currPos = compareTo
             i = index
-        if alpha != None and isBetter(compareTo, alpha, True):
+            change = True
+        if alpha != None and change and isBetter(currPos, alpha, True):
             return alpha
 
     if len(nextPositions)==0 or i == -1:
@@ -394,7 +395,7 @@ def getNextWhiteMove(board, alpha, depth, maxDepth):
 def getNextBlackMove(board, alpha, depth, maxDepth):
     if board.is_checkmate() or board.is_stalemate():
         return board
-    nextPositions = getAllNextPositions(board, depth<=maxDepth)
+    nextPositions = getAllNextPositions(board, True)
     currPos = None
     nextMove = True
 
@@ -404,13 +405,23 @@ def getNextBlackMove(board, alpha, depth, maxDepth):
     for pos in nextPositions:
         index = index + 1
         compareTo = pos
-        if depth<maxDepth or isCaptureMove(pos, board) or pos.has_legal_en_passant():
+        if depth<maxDepth or pos.has_legal_en_passant():
             compareTo = getNextWhiteMove(pos, currPos, depth+1, maxDepth)
-        compareTo = compareTo
-        if currPos == None or isBetter(compareTo, currPos, False):
+        if depth == 0 and 'p . p p . . P P' in str(pos):
+            print('--------')
+            print(str(pos))
+            print('--')
+            print(str(currPos))
+            print('--')
+            print(str(compareTo))
+            print('--------')
+
+        change = False
+        if currPos == None or (compareTo.fen() != currPos.fen() and isBetter(compareTo, currPos, False)):
             currPos = compareTo
             i = index
-        if alpha != None and isBetter(compareTo, alpha, False):
+            change = True
+        if alpha != None and change and isBetter(currPos, alpha, False):
             return alpha
 
     if len(nextPositions) == 0 or i == -1:
