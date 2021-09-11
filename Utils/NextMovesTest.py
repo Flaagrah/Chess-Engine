@@ -3,7 +3,7 @@ import NextMoves
 import chess
 import time
 import timeit
-
+import numpy as np
 class MyTestCase(unittest.TestCase):
     # def test_board(self):
     #     board = chess.Board()
@@ -108,11 +108,20 @@ class MyTestCase(unittest.TestCase):
     # def test_getAllNextPositions(self):
     #     board = chess.Board()
     #     t = time.time()
-    #     positions = NextMoves.getAllNextPositions(board)
+    #     positions = NextMoves.getAllNextPositions(board, True)
     #     self.assertEqual(20, len(positions))
     #     board = positions[0]
-    #     positions = NextMoves.getAllNextPositions(board)
+    #     positions = NextMoves.getAllNextPositions(board, True)
     #     self.assertEqual(20, len(positions))
+    #
+    #     board = chess.Board()
+    #     m1 = chess.Move.from_uci('e2e4')
+    #     board.push(m1)
+    #     m2 = chess.Move.from_uci('d7d5')
+    #     board.push(m2)
+    #     positions = NextMoves.getAllNextPositions(board, True)
+    #     positionsWC = NextMoves.getAllNextPositions(board, False)
+    #     self.assertEqual(1, len(positions)-len(positionsWC))
     #
     # def test_compare(self):
     #     board1 = chess.Board()
@@ -140,23 +149,95 @@ class MyTestCase(unittest.TestCase):
     #     result = NextMoves.compare(board1, board2, False)
     #     self.assertLess(result[0], result[1])
 
-    def test_get_next_move(self):
-        board = chess.Board()
-        board.set_fen('k7/8/1K6/1R6/8/8/8/8 w')
-        nextPosition = NextMoves.getNextMove(board, True, 0, 2)
-        nextPosition = NextMoves.getNextMove(nextPosition, False, 0, 2)
-        nextPosition = NextMoves.getNextMove(nextPosition, True, 0, 2)
-        print(str(nextPosition))
-        self.assertEqual(True, nextPosition.is_checkmate())
+    # def test_capture_move(self):
+    #     board = chess.Board()
+    #     board2 = chess.Board()
+    #     m1 = chess.Move.from_uci('e2e4')
+    #     board2.push(m1)
+    #     self.assertEqual(False, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq')
+    #     board2.set_fen('rnbq1rk1/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w')
+    #     self.assertEqual(False, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('8/8/8/pk6/8/RK6/8/8 w')
+    #     board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
+    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('8/8/8/qk6/8/RK6/8/8 w')
+    #     board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
+    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('8/8/8/rk6/8/RK6/8/8 w')
+    #     board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
+    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('8/8/8/nk6/8/RK6/8/8 w')
+    #     board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
+    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('8/8/8/bk6/8/RK6/8/8 w')
+    #     board2.set_fen('8/8/8/Rk6/8/1K6/8/8 w')
+    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('8/8/8/PK6/8/rk6/8/8 b')
+    #     board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
+    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('8/8/8/QK6/8/rk6/8/8 b')
+    #     board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
+    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('8/8/8/RK6/8/rk6/8/8 b')
+    #     board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
+    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('8/8/8/NK6/8/rk6/8/8 b')
+    #     board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
+    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
+    #
+    #     board.set_fen('8/8/8/BK6/8/rk6/8/8 b')
+    #     board2.set_fen('8/8/8/rK6/8/1k6/8/8 b')
+    #     self.assertEqual(True, NextMoves.isCaptureMove(board2, board))
 
-        board.set_fen('K7/8/1k6/1r6/8/8/8/8 b')
-        nextPosition = NextMoves.getNextMove(board, False, 0, 2)
-        print(str(nextPosition))
-        nextPosition = NextMoves.getNextMove(nextPosition, True, 0, 2)
-        print(str(nextPosition))
-        nextPosition = NextMoves.getNextMove(nextPosition, False, 0, 2)
-        print(str(nextPosition))
-        self.assertEqual(True, nextPosition.is_checkmate())
+
+    def test_get_next_move(self):
+        # board = chess.Board()
+        # board.set_fen('k7/8/1K6/1R6/8/8/8/8 w')
+        # nextPosition = NextMoves.getNextMove(board, True, 2)
+        # nextPosition2 = NextMoves.getNextMove(nextPosition, False, 2)
+        # nextPosition3 = NextMoves.getNextMove(nextPosition2, True, 2)
+        # print(str(nextPosition3))
+        # self.assertEqual(True, nextPosition3.is_checkmate())
+        #
+        # board.set_fen('K7/8/1k6/1r6/8/8/8/8 b')
+        # nextPosition = NextMoves.getNextMove(board, False, 2)
+        # nextPosition2 = NextMoves.getNextMove(nextPosition, True, 2)
+        # nextPosition3 = NextMoves.getNextMove(nextPosition2, False, 2)
+        # print(str(nextPosition3))
+        # self.assertEqual(True, nextPosition3.is_checkmate())
+        #
+        t = time.time()
+        board = chess.Board("2r2rk1/pp1n1pp1/1q3b1p/2pp2PP/2P5/Q4N2/PP1B1P2/1K1R3R b - - 0 20 ")
+        print(board)
+        nextPosition = NextMoves.getNextMove(board, False, 1)
+        print(nextPosition)
+        # nextPosition = NextMoves.getNextMove(nextPosition, True, 0)
+        # print(nextPosition)
+        # nextPosition = NextMoves.getNextMove(nextPosition, False, 0)
+        # print(nextPosition)
+        # nextPosition = NextMoves.getNextMove(nextPosition, True, 0)
+        # print(nextPosition)
+        # nextPosition = NextMoves.getNextMove(nextPosition, False, 0)
+        # print(nextPosition)
+        print(time.time()-t)
+
+        # board1 = chess.Board("2r2rk1/pp1n1pp1/1q3b1p/2pp2PP/2P5/Q4N2/PP1B1P2/1K1R3R b - - 0 20 ")
+        # board2 = chess.Board("2r2rk1/pp1n1pp1/1q3P1p/2p4P/2p5/Q4N2/PP1B1P2/1K1R3R w - - 0 20 ")
+        # print(board1)
+        # print(board2)
+        # print(NextMoves.compare(board1, board2))
+
     # def helper(self, position, numNCMoves, numCMoves, row, col, whiteMove, c, prevPosition = None):
     #     cMoves = []
     #     ncMoves = []
