@@ -26,7 +26,7 @@ def genModel():
         return complexEncoder
 
 
-    complexEncoder1 = complexEncoderName(keras.models.load_model('../Model/Pretraining/autoencoder4', custom_objects={"encoderEvaluation": encoderEvaluation}), 's')
+    complexEncoder1 = complexEncoderName(keras.models.load_model('Model/Pretraining/autoencoder4', custom_objects={"encoderEvaluation": encoderEvaluation}), 's')
 
     input1 = keras.layers.Input((773,))
     input2 = keras.layers.Input((773,))

@@ -4,10 +4,10 @@ import numpy as np
 
 class MyTestCase(unittest.TestCase):
     def test_dataGeneratorTest(self):
-        white = np.load("sortedDataStr/whiteWins.npz")["states"]
-        whiteBoolStates = np.load("sortedDataStr/boolWhiteWins.npz")["bools"]
-        black = np.load("sortedDataStr/blackWins.npz")["states"]
-        blackBoolStates = np.load("sortedDataStr/boolBlackWins.npz")["bools"]
+        white = np.load("Model/sortedDataStr/whiteWins.npz")["states"]
+        whiteBoolStates = np.load("Model/sortedDataStr/boolWhiteWins.npz")["bools"]
+        black = np.load("Model/sortedDataStr/blackWins.npz")["states"]
+        blackBoolStates = np.load("Model/sortedDataStr/boolBlackWins.npz")["bools"]
 
         whiteWinData = []
         blackWinData = []

@@ -1,8 +1,3 @@
-# import sys
-# !{sys.executable} -m pip install chess
-# !{sys.executable} -m pip install pgn-parser
-# !{sys.executable} -m pip install --upgrade pip
-# !{sys.executable} -m pip install tensorflow
 
 import chess
 import pgn_parser

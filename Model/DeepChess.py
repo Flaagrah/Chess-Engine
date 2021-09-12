@@ -90,18 +90,18 @@ class DataGenerator(tf.keras.utils.Sequence):
 
 
 if __name__ == '__main__':
-    white = np.load("sortedDataStr/whiteWins.npz")["states"]
-    whiteBoolStates = np.load("sortedDataStr/boolWhiteWins.npz")["bools"]
+    white = np.load("Model/sortedDataStr/whiteWins.npz")["states"]
+    whiteBoolStates = np.load("Model/sortedDataStr/boolWhiteWins.npz")["bools"]
     print(len(white))
-    black = np.load("sortedDataStr/blackWins.npz")["states"]
-    blackBoolStates = np.load("sortedDataStr/boolBlackWins.npz")["bools"]
+    black = np.load("Model/sortedDataStr/blackWins.npz")["states"]
+    blackBoolStates = np.load("Model/sortedDataStr/boolBlackWins.npz")["bools"]
     print(len(black))
 
-    whiteTest = np.load("sortedDataStr/whiteWinsTest.npz")["states"]
-    whiteBoolStatesTest = np.load("sortedDataStr/boolWhiteWinsTest.npz")["bools"]
+    whiteTest = np.load("Model/sortedDataStr/whiteWinsTest.npz")["states"]
+    whiteBoolStatesTest = np.load("Model/sortedDataStr/boolWhiteWinsTest.npz")["bools"]
     print(len(whiteTest))
-    blackTest = np.load("sortedDataStr/blackWinsTest.npz")["states"]
-    blackBoolStatesTest = np.load("sortedDataStr/boolBlackWinsTest.npz")["bools"]
+    blackTest = np.load("Model/sortedDataStr/blackWinsTest.npz")["states"]
+    blackBoolStatesTest = np.load("Model/sortedDataStr/boolBlackWinsTest.npz")["bools"]
     print(len(blackTest))
 
     whiteWinData = []
