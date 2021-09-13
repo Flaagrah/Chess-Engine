@@ -9,5 +9,5 @@ def hello():
     fen = fen.replace('_','/')
     board = chess.Board()
     board.set_fen(fen)
-    board = Utils.NextMoves.getNextMove(board, 2)
+    board = Utils.NextMoves.getNextMove(board, 1)
     return str(board)

@@ -217,14 +217,6 @@ def getNextBlackMove(board, alpha, depth, maxDepth):
         compareTo = pos
         if depth<maxDepth or pos.has_legal_en_passant():
             compareTo = getNextWhiteMove(pos, currPos, depth+1, maxDepth)
-        if depth == 0 and 'p . p p . . P P' in str(pos):
-            print('--------')
-            print(str(pos))
-            print('--')
-            print(str(currPos))
-            print('--')
-            print(str(compareTo))
-            print('--------')
 
         change = False
         if currPos == None or (compareTo.fen() != currPos.fen() and isBetter(compareTo, currPos, False)):
