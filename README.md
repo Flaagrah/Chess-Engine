@@ -1,6 +1,6 @@
 # Chess-Engine
 
-# Dataset
+# Citations
 
 Model and methodology derived from this paper:
 O. David, N. Netanyahu, L. Wolf. "DeepChess: End-to-End Deep Neural Network for Automatic Learning in Chess". International Conference on Artificial Neural Networks (ICANN), 2016. https://www.cs.tau.ac.il/~wolf/papers/deepchess.pdf
