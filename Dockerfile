@@ -10,4 +10,5 @@ RUN pip install --upgrade pip && \
 WORKDIR /Docker
 COPY . /Docker
 
+ENV FLASK_RUN_PORT=8080
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]

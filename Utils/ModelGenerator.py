@@ -1,5 +1,6 @@
 import tensorflow.keras as keras
 import tensorflow as tf
+#model adapted from https://www.cs.tau.ac.il/~wolf/papers/deepchess.pdf
 def genModel():
     def encoderEvaluation(y_true, y_enc):
         y_enc_round = tf.math.round(y_enc)

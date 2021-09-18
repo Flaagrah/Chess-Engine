@@ -204,9 +204,9 @@ class MyTestCase(unittest.TestCase):
     def test_get_next_move(self):
         board = chess.Board()
         board.set_fen('k7/8/1K6/1R6/8/8/8/8 w')
-        nextPosition = Utils.NextMoves.getNextMove(board, 2)
-        nextPosition2 = Utils.NextMoves.getNextMove(nextPosition, 2)
-        nextPosition3 = Utils.NextMoves.getNextMove(nextPosition2, 2)
+        nextPosition = Utils.NextMoves.getNextMove(board, 3)
+        nextPosition2 = Utils.NextMoves.getNextMove(nextPosition, 3)
+        nextPosition3 = Utils.NextMoves.getNextMove(nextPosition2, 3)
         print(str(nextPosition3))
         self.assertEqual(True, nextPosition3.is_checkmate())
 
@@ -220,9 +220,14 @@ class MyTestCase(unittest.TestCase):
         t = time.time()
         board = chess.Board("2r2rk1/pp1n1pp1/1q3b1p/2pp2PP/2P5/Q4N2/PP1B1P2/1K1R3R b - - 0 20 ")
         print(board)
-        nextPosition = Utils.NextMoves.getNextMove(board, 3)
+        nextPosition = Utils.NextMoves.getNextMove(board, 1)
         print(nextPosition)
         print(time.time()-t)
+
+        t = time.time()
+        nextPosition = Utils.NextMoves.getNextMove(nextPosition, 1)
+        print(nextPosition)
+        print(time.time() - t)
 
 
 if __name__ == '__main__':
